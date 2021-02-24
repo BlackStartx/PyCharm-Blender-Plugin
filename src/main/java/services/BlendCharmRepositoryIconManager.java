@@ -1,0 +1,29 @@
+package services;
+
+import icons.BlendCharmIcons;
+import data.VirtualBlenderFile;
+import util.MyProjectHolder;
+import com.intellij.ide.IconProvider;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.impl.file.PsiDirectoryImpl;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+
+public class BlendCharmRepositoryIconManager extends IconProvider {
+    @Nullable
+    @Override
+    public Icon getIcon(@NotNull PsiElement psiElement, int i) {
+        if (!(psiElement instanceof PsiDirectoryImpl)) return null;
+
+        PsiDirectoryImpl c = ((PsiDirectoryImpl) psiElement);
+        VirtualFile virtualFile = c.getVirtualFile();
+        MyProjectHolder project = new MyProjectHolder(psiElement.getProject());
+
+        VirtualBlenderFile virtualBlenderFile = new VirtualBlenderFile(project, virtualFile);
+
+        return !virtualBlenderFile.isRootAndBlenderAddon() ? null : virtualBlenderFile.isSource() ? BlendCharmIcons.BLENDER_SRC_FOLDER_ICON : BlendCharmIcons.BLENDER_FOLDER_ICON;
+    }
+}
