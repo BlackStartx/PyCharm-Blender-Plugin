@@ -357,7 +357,8 @@ public class BlenderToolWindow {
 
                 Executor debugExecutorInstance = DefaultDebugExecutor.getDebugExecutorInstance();
                 ExecutionEnvironment executionEnvironment = ExecutionEnvironmentBuilder.create(project.getProject(), debugExecutorInstance, configuration).build();
-                executionEnvironment.getRunner().execute(executionEnvironment, callback);
+                executionEnvironment.setCallback(callback);
+                executionEnvironment.getRunner().execute(executionEnvironment);
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
