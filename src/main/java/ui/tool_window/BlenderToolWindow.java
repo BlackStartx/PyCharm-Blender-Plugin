@@ -1,10 +1,11 @@
 package ui.tool_window;
 
+import com.intellij.execution.*;
 import data.*;
 import util.core.MyFileUtils;
 import util.core.MyIterator;
-import util.core.json_util.MyJsonDocument;
 import util.core.json_util.MyJsonParser;
+import util.core.json_util.values.MyJsonNode;
 import util.core.json_util.values.MyJsonObject;
 import util.core.json_util.values.MyJsonString;
 import util.core.socket.server.MyServerSocket;
@@ -15,10 +16,6 @@ import util.MySwingUtil;
 import plugin_settings.PluginSettings;
 import ui.dialogs.add_blender_instance.AddBlenderInstanceWrapper;
 import ui.dialogs.remove_blender_instance.RemoveBlenderInstanceWrapper;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Executor;
-import com.intellij.execution.RunManager;
-import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
@@ -126,7 +123,7 @@ public class BlenderToolWindow {
         for (int i = 0; i < runningInstancesAdapter.size(); i++) {
             MySocketConnection socket = runningInstancesAdapter.get(i).getSocket();
             if (socket == null) continue;
-            socket.sendJsonData(new MyJsonDocument().getRoot()
+            socket.sendJsonData(new MyJsonNode()
                     .addKeyJsonString(CommunicationData.REQUEST, CommunicationData.REQUEST_PLUGIN_REFRESH)
                     .addKeyJsonArray(CommunicationData.REQUEST_PLUGIN_REFRESH_NAME_LIST, strings, MyJsonString::new)
             );
@@ -197,7 +194,7 @@ public class BlenderToolWindow {
         runningBlenderProcess.assignSocket(socket);
         blenderSettings.removeDeletedAddon(project);
 
-        socket.sendJsonData(new MyJsonDocument().getRoot()
+        socket.sendJsonData(new MyJsonNode()
                 .addKeyJsonString(CommunicationData.REQUEST, CommunicationData.REQUEST_PLUGIN_FOLDER)
                 .addKeyJsonString(CommunicationData.REQUEST_PLUGIN_FOLDER_PROJECT_FOLDER, project.getBasePath())
                 .addKeyJsonArray(CommunicationData.REQUEST_PLUGIN_FOLDER_ADDON_NAMES, blenderSettings.getBlenderAddons(), MyJsonString::new)
@@ -205,8 +202,7 @@ public class BlenderToolWindow {
     }
 
     private void onInstanceMessage(MySocketConnection.Data message, RunningBlenderProcess runningBlenderProcess) {
-        MyJsonDocument document = new MyJsonParser().parse(message.getStringData());
-        MyJsonObject<?> root = document.getRoot();
+        MyJsonObject<?> root = new MyJsonParser().parse(message.getStringData());
         switch (root.get(CommunicationData.RESPONSE).getIntValue()) {
             case CommunicationData.RESPONSE_PLUGIN_FOLDER:
                 String addonPath = root.get(CommunicationData.RESPONSE_PLUGIN_FOLDER_PLUGIN_PATH).getStringValue();
@@ -233,6 +229,12 @@ public class BlenderToolWindow {
 
     @NotNull
     private RunningBlenderProcess startBlenderProcess(boolean debugMode) throws ExecutionException {
+        return startBlenderProcess(debugMode, () -> {
+        });
+    }
+
+    @NotNull
+    private RunningBlenderProcess startBlenderProcess(boolean debugMode, Runnable onEnd) throws ExecutionException {
         if (currentSocket.open()) {
             BlenderInstance instance = getSelectedBlenderInstance();
             ArrayList<String> command = new ArrayList<>();
@@ -270,6 +272,7 @@ public class BlenderToolWindow {
                 @Override
                 public void onEnd(MySocketConnection socket) {
                     onInstanceConnectionEnd(runningBlenderProcess);
+                    onEnd.run();
                 }
             });
 

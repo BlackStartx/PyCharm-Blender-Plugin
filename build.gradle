@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.blackstartx'
-version '1.0'
+version '2021.1'
 
 sourceCompatibility = 1.8
 
@@ -19,7 +19,7 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     plugins = ["python"]
-    localPath = "C:\\Users\\Leonardo\\AppData\\Local\\JetBrains\\Toolbox\\apps\\PyCharm-P\\ch-0\\203.6682.179"
+    version = "PY-2021.1"
 }
 patchPluginXml {
 }

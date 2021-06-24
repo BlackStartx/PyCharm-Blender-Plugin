@@ -24,7 +24,7 @@ public class MyJsonParser {
 
     private MyJsonObject<?> source;
 
-    public MyJsonDocument parse(String json) {
+    public MyJsonObject<?> parse(String json) {
         if (json == null)
             return null;
 
@@ -119,7 +119,7 @@ public class MyJsonParser {
         }
 
         if (keyPath.size() != 0 || objectPath.size() != 0) throw new MyJsonInvalidFormat();
-        return new MyJsonDocument(source);
+        return source;
     }
 
     private void evaluateStringBuilder(Runnable action) {

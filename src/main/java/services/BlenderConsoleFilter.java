@@ -14,7 +14,7 @@ public class BlenderConsoleFilter implements ConsoleFilterProvider {
         return new Filter[]{new BlenderLinkFilter(project)};
     }
 
-    static class BlenderLinkFilter implements Filter {
+    public static class BlenderLinkFilter implements Filter {
 
         private final Project project;
         private final BlenderSettings blenderSettings;
@@ -27,27 +27,44 @@ public class BlenderConsoleFilter implements ConsoleFilterProvider {
         @Nullable
         @Override
         public Result applyFilter(@NotNull String s, int end) {
-
-            // TODO: Console Filter is currently disabled in plugin.xml.
-            //       It will probably be included in future releases.
-
             String projectPath = project.getBasePath();
-            if(projectPath == null) return null;
+            if (projectPath == null) return null;
 
             int start = end - s.length();
-            for(BlenderInstance instance : blenderSettings.getBlenderInstances()){
-                if(instance.addonPath == null || instance.addonPath.equals("")) continue;
+            for (BlenderInstance instance : blenderSettings.getBlenderInstances()) {
+                if (instance.addonPath == null || instance.addonPath.equals("")) continue;
                 int index = s.indexOf(instance.addonPath);
-                if(index != -1){
-                    int fileStart = start + index;
-                    String blenderFile = s.substring(index).split("\",")[0];
+                if (index != -1) {
+                    String afterPathUnknown = s.substring(index + instance.addonPath.length());
+                    String afterPath = afterPathUnknown.split("[\":]")[0];
+                    String blenderFile = instance.addonPath + afterPath;
                     String localFile = blenderFile.replace(instance.addonPath, projectPath).replace("\\", "/");
-                    int line = Integer.parseInt(s.split("line ")[1].split(", ")[0]) - 1;
+
+                    int fileStart = start + index;
+                    int line = TryGetLine(s);
                     LazyFileHyperlinkInfo hyperlinkInfo = new LazyFileHyperlinkInfo(project, localFile, line, 0);
-                    return new Result(fileStart - 5, fileStart + 10, hyperlinkInfo);
+                    return new Result(fileStart, fileStart + blenderFile.length(), hyperlinkInfo);
                 }
             }
             return null;
+        }
+
+        /**
+         * A really bad way to obtain the line from two different type of strings.
+         *
+         * @param msg the message from the console.
+         * @return the line the msg is referring to.
+         */
+        private int TryGetLine(String msg) {
+            try {
+                return Integer.parseInt(msg.split("line ")[1].split(", ")[0]) - 1;
+            } catch (Exception ignored) {
+            }
+            try {
+                return Integer.parseInt(msg.split(":")[2].trim()) - 1;
+            } catch (Exception ignored) {
+            }
+            return 0;
         }
     }
 }

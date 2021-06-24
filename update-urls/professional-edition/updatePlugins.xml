@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<!-- Professional Edition - Self Update URL -->
+<!-- Professional Edition - Self Update URL -->
+<!-- Professional Edition - Self Update URL -->
+
+<plugins>
+    <plugin id="org.blackstartx.blend-charm" version="2021.1"
+            url="https://github.com/BlackStartx/PyCharm-Blender-Plugin/releases/download/v2021.1/Blend-Charm.2021.1.Professional.Edition.zip">
+        <vendor email="xthewhitel@gmail.com" url="">BlackStartx</vendor>
+        <name>Blend-Charm</name>
+        <description>
+<![CDATA[
+    A PyCharm Plugin that simplify the development of Blender Add-On inside the PyCharm IDE.
+    <br/>
+    <br/>
+    Available for boot Community or Professional editions of PyCharm.
+]]>
+        </description>
+        <change-notes>
+<![CDATA[
+    Change Log:
+    <br/>
+    -Self-Update repository URL's for auto updating the plugin whenever a newer version is released.
+    <br/>
+    -Added console links. Now you can click a file in the Blender Output Console to open it in PyCharm.
+    <br/>
+    -Added Local Inspection for bl_idname syntax.
+]]>
+        </change-notes>
+    </plugin>
+</plugins>

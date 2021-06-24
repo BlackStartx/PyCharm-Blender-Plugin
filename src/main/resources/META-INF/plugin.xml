@@ -2,12 +2,13 @@
     <id>org.blackstartx.blend-charm</id>
     <name>Blend-Charm</name>
     <vendor email="xthewhitel@gmail.com">BlackStartx</vendor>
+    <version>2021.1</version>
 
     <description><![CDATA[
     A PyCharm Plugin that simplify the development of Blender Add-On inside the PyCharm IDE.
     <br/>
     <br/>
-    Available for boot Community or Professional editions of PyCharm!.
+    Available for boot Community or Professional editions of PyCharm.
     ]]></description>
 
     <depends>com.intellij.modules.lang</depends>
@@ -19,7 +20,15 @@
         <iconProvider implementation="services.BlendCharmRepositoryIconManager" order="first"/>
         <toolWindow id="Blend-Charm" icon="BlendCharmIcons.BLENDER_LOGO" anchor="bottom" factoryClass="ui.tool_window.BlenderToolWindowFactory"/>
         <projectService serviceImplementation="services.BlendCharmPersistentData"/>
-<!--        <consoleFilterProvider implementation="services.BlenderConsoleFilter"/>-->
+        <consoleFilterProvider implementation="services.BlenderConsoleFilter" order="first"/>
+        <localInspection language="Python"
+                         displayName="Blender: Id names must be lowercase in order to be registered."
+                         groupPath="Blender"
+                         groupBundle="messages.InspectionsBundle"
+                         groupName="Exceptions"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="services.inspections.BlIdLowercase"/>
     </extensions>
 
     <actions>
