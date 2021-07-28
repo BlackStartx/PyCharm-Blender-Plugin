@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.blackstartx'
-version '2021.1'
+version '2021.2'
 
 sourceCompatibility = 1.8
 
