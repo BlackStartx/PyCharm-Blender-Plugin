@@ -19,7 +19,8 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     plugins = ["python"]
-    version = "PY-2021.1"
+    version = "PY-2021.2"
+    type = 'PY'
 }
 patchPluginXml {
 }
