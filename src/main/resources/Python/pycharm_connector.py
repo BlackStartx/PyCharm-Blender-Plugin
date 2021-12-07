@@ -104,7 +104,7 @@ def on_data(client: socket, data: bytes):
         project = json_data[request_plugin_folder_project_folder]
         project_name = os.path.split(project)[1]
 
-        script_folder = bpy.utils.user_resource('SCRIPTS', "addons")
+        script_folder = bpy.utils.user_resource('SCRIPTS', path="addons")
         for addon in json_data[request_plugin_folder_addon_names]:
             if addon == ".":
                 src = project
