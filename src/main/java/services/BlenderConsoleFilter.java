@@ -1,7 +1,7 @@
 package services;
 
 import data.BlenderInstance;
-import data.BlenderSettings;
+import settings.BlenderSettings;
 import com.intellij.execution.filters.*;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +50,7 @@ public class BlenderConsoleFilter implements ConsoleFilterProvider {
         }
 
         /**
-         * A really bad way to obtain the line from two different type of strings.
+         * An awful way to obtain the line from two different type of strings.
          *
          * @param msg the message from the console.
          * @return the line the msg is referring to.

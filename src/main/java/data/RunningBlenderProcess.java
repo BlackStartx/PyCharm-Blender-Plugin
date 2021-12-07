@@ -1,10 +1,12 @@
 package data;
 
+import com.intellij.execution.ui.ConsoleView;
+import com.jetbrains.python.console.PythonDebugLanguageConsoleView;
 import util.core.socket.MySocketConnection;
 import com.intellij.execution.process.OSProcessHandler;
-import com.intellij.execution.process.ProcessHandler;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class RunningBlenderProcess {
 
@@ -14,6 +16,7 @@ public class RunningBlenderProcess {
 
     private MySocketConnection socket;
     private JComponent component;
+    private ConsoleView console;
 
     public RunningBlenderProcess(BlenderInstance instance, OSProcessHandler processHandler, boolean debugMode) {
         this.instance = instance;
@@ -30,7 +33,7 @@ public class RunningBlenderProcess {
         return debugMode;
     }
 
-    public ProcessHandler getProcess() {
+    public OSProcessHandler getProcess() {
         return processHandler;
     }
 
@@ -50,7 +53,16 @@ public class RunningBlenderProcess {
         return component;
     }
 
+    public ConsoleView getConsole() {
+        return console;
+    }
+
     public void setComponent(JComponent component) {
         this.component = component;
+    }
+
+    public void attachToProcess(ConsoleView console) {
+        this.console = console;
+        this.console.attachToProcess(getProcess());
     }
 }

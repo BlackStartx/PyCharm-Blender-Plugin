@@ -23,7 +23,8 @@ public class BlendCharmRepositoryIconManager extends IconProvider {
         MyProjectHolder project = new MyProjectHolder(psiElement.getProject());
 
         VirtualBlenderFile virtualBlenderFile = new VirtualBlenderFile(project, virtualFile);
+        boolean addon = virtualBlenderFile.isSubRootAndBlenderAddon() || virtualBlenderFile.isRootAndBlenderProject();
 
-        return !virtualBlenderFile.isRootAndBlenderAddon() ? null : virtualBlenderFile.isSource() ? BlendCharmIcons.BLENDER_SRC_FOLDER_ICON : BlendCharmIcons.BLENDER_FOLDER_ICON;
+        return !addon ? null : virtualBlenderFile.isSource() ? BlendCharmIcons.BLENDER_SRC_FOLDER_ICON : BlendCharmIcons.BLENDER_FOLDER_ICON;
     }
 }

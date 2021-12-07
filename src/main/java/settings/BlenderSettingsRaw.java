@@ -1,4 +1,4 @@
-package data;
+package settings;
 
 import com.intellij.util.xmlb.Converter;
 import com.intellij.util.xmlb.annotations.OptionTag;
@@ -11,24 +11,25 @@ import java.io.StringWriter;
 
 public class BlenderSettingsRaw {
     @OptionTag(converter = BlenderSettingsRaw.BlenderSettingsConverter.class)
-    private BlenderSettings blenderSettings;
+    private BlenderSettingsData blenderSettings;
 
-    public BlenderSettings getBlenderSettings() {
-        if (blenderSettings == null) blenderSettings = new BlenderSettings();
+    public BlenderSettingsData getBlenderSettings() {
+        if (blenderSettings == null) blenderSettings = new BlenderSettingsData();
         return blenderSettings;
     }
 
-    public static class BlenderSettingsConverter extends Converter<BlenderSettings> {
+    public static class BlenderSettingsConverter extends Converter<BlenderSettingsData> {
 
         @Nullable
         @Override
-        public BlenderSettings fromString(@NotNull String value) {
+        public BlenderSettingsData fromString(@NotNull String value) {
             StringReader reader = new StringReader(value);
-            return JAXB.unmarshal(reader, BlenderSettings.class);
+            return JAXB.unmarshal(reader, BlenderSettingsData.class);
         }
 
         @Override
-        public @Nullable String toString(@NotNull BlenderSettings value) {
+        public @Nullable
+        String toString(@NotNull BlenderSettingsData value) {
             StringWriter sw = new StringWriter();
             JAXB.marshal(value, sw);
             return sw.toString();

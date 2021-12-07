@@ -66,8 +66,7 @@ response_plugin_refresh_name_list = request_plugin_refresh_name_list
 #   Params:   #
 # # # # # # # #
 
-printing = False
-
+print_on = False
 debug_mode = None
 debug_port = None
 debug_egg = None
@@ -82,6 +81,8 @@ if "debug_port" in my_args:
     debug_port = int(my_args["debug_port"])
 if "debug_egg" in my_args:
     debug_egg = my_args["debug_egg"]
+if "print_on" in my_args:
+    print_on = True
 
 
 def send_json_string(client, string):
@@ -89,7 +90,7 @@ def send_json_string(client, string):
 
 
 def my_print(text):
-    if printing:
+    if print_on:
         run_in_main_thread(print, text)
 
 
@@ -101,9 +102,16 @@ def on_data(client: socket, data: bytes):
     if request_id == request_plugin_folder:
         my_print("[My Socket] ---- Request Plugin Folder ----")
         project = json_data[request_plugin_folder_project_folder]
+        project_name = os.path.split(project)[1]
+
         script_folder = bpy.utils.user_resource('SCRIPTS', "addons")
         for addon in json_data[request_plugin_folder_addon_names]:
-            src = os.path.join(project, addon)
+            if addon == ".":
+                src = project
+                addon = project_name
+            else:
+                src = os.path.join(project, addon)
+
             dst = os.path.join(script_folder, addon)
             if not os.path.exists(dst):
                 sym_link(src, dst)

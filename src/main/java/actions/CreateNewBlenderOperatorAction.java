@@ -26,7 +26,7 @@ public class CreateNewBlenderOperatorAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
         NewBlenderOperatorWrapper dialog = new NewBlenderOperatorWrapper(project.getProject());
         if (dialog.showAndGet()) {
-            String panelsPath = Paths.appended(virtualBlenderFile.getRootVirtualFile().getPath(), "operators");
+            String panelsPath = Paths.appended(virtualBlenderFile.getSubRootVirtualFile().getPath(), "operators");
 
             String stream = MyInputStreamHelper.readString(this.getClass().getClassLoader().getResourceAsStream("Python/Templates/new_operator.py"));
             stream = stream.replace("OPERATOR_CLASS_NAME", dialog.form.getOperatorClassName());

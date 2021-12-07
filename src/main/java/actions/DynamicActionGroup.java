@@ -17,23 +17,37 @@ public class DynamicActionGroup extends ActionGroup {
         if (anActionEvent == null) return new AnAction[0];
 
         MyProjectHolder project = new MyProjectHolder(anActionEvent.getProject());
-        VirtualFile virtualFile = anActionEvent.getDataContext().getData(PlatformDataKeys.VIRTUAL_FILE);
+        VirtualFile[] virtualFiles = anActionEvent.getDataContext().getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
 
-        if (virtualFile == null) return new AnAction[0];
+        if (virtualFiles == null || virtualFiles.length == 0) return new AnAction[0];
+        boolean root = true;
+        boolean addon = true;
+        boolean subRoot = true;
 
-        VirtualBlenderFile virtualBlenderFile = new VirtualBlenderFile(project, virtualFile);
+        for(VirtualFile file : virtualFiles){
+            VirtualBlenderFile blenderFile = new VirtualBlenderFile(project, file);
+            if(!blenderFile.isRoot) root = false;
+            if(!blenderFile.isSubRoot) subRoot = false;
+            if(!blenderFile.isBlenderAddon()) addon = false;
+        }
+
         ArrayList<AnAction> actions = new ArrayList<>();
-
-        if (virtualBlenderFile.isRootAndBlenderAddon()) {
+        if (addon && virtualFiles.length == 1) {
+            VirtualBlenderFile virtualBlenderFile = new VirtualBlenderFile(project, virtualFiles[0]);
             actions.add(new CreateNewBlenderPanelAction(project, virtualBlenderFile));
             actions.add(new CreateNewBlenderOperatorAction(project, virtualBlenderFile));
             actions.add(new Separator());
-            actions.add(new UnmarkAsAddonAction(project));
+            if(subRoot) actions.add(new UnmarkAsAddonAction(project));
+            if(root) actions.add(new UnmarkAsAddonProjectAction(project));
         } else {
             actions.add(new CreateNewBlenderAddonAction(project));
-            if (virtualBlenderFile.isRoot) {
+            if (subRoot && !project.settings().isBlenderProject()) {
                 actions.add(new Separator());
                 actions.add(new MarkAsAddonAction(project));
+            }
+            if (root) {
+                actions.add(new Separator());
+                actions.add(new MarkAsAddonProjectAction(project));
             }
         }
         return actions.toArray(new AnAction[0]);

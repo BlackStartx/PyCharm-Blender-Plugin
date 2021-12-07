@@ -26,7 +26,7 @@ public class CreateNewBlenderPanelAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
         NewBlenderPanelWrapper dialog = new NewBlenderPanelWrapper(project.getProject());
         if (dialog.showAndGet()) {
-            String panelsPath = Paths.appended(virtualBlenderFile.getRootVirtualFile().getPath(), "panels");
+            String panelsPath = Paths.appended(virtualBlenderFile.getSubRootVirtualFile().getPath(), "panels");
 
             String stream = MyInputStreamHelper.readString(this.getClass().getClassLoader().getResourceAsStream("Python/Templates/new_panel.py"));
             stream = stream.replace("PANEL_CLASS_NAME", dialog.form.getPanelClassName());

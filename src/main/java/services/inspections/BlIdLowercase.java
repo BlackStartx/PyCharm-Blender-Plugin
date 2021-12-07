@@ -40,7 +40,8 @@ public class BlIdLowercase extends LocalInspectionTool {
 
         @Override
         public @IntentionName
-        @NotNull String getName() {
+        @NotNull
+        String getName() {
             return "Convert to lowercase";
         }
 

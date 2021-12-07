@@ -1,7 +1,11 @@
 package ui.tool_window;
 
 import com.intellij.execution.*;
+import com.intellij.execution.ui.ConsoleViewContentType;
+import com.intellij.execution.ui.RunContentDescriptor;
 import data.*;
+import settings.BlenderSettings;
+import ui.dialogs.blender_popup.NewBlenderPopupWrapper;
 import util.core.MyFileUtils;
 import util.core.MyIterator;
 import util.core.json_util.MyJsonParser;
@@ -22,7 +26,6 @@ import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder;
-import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -92,12 +95,11 @@ public class BlenderToolWindow {
         runningInstancesAdapter = new DefaultListModel<>();
         runningInstances.setModel(runningInstancesAdapter);
         runningInstances.setCellRenderer(new RunningBlenderProcessRenderer());
+        runningInstances.addListSelectionListener(e -> setConsoleView(getSelectedRunningProcess()));
+    }
 
-        runningInstances.addListSelectionListener(e -> {
-            int index = runningInstances.getSelectedIndex();
-            RunningBlenderProcess process = index == -1 ? null : runningInstancesAdapter.get(runningInstances.getSelectedIndex());
-            setConsoleView(process);
-        });
+    private RunningBlenderProcess getSelectedRunningProcess() {
+        return runningInstances.getSelectedIndex() == -1 ? null : runningInstancesAdapter.get(runningInstances.getSelectedIndex());
     }
 
     private boolean isSelectedInstanceValid() {
@@ -115,18 +117,27 @@ public class BlenderToolWindow {
     }
 
     private void onSave(VirtualFile virtualFile) {
+        for (int i = 0; i < runningInstancesAdapter.size(); i++)
+            intellijConsoleInfoPrintLn(runningInstancesAdapter.get(i).getConsole(), "[On Save: VFS_CHANGE]");
         String ofAddon = new VirtualBlenderFile(project, virtualFile).getRelativeAddonName();
         if (ofAddon != null) reloadAddons(new MyIterator<>(new String[]{ofAddon}));
     }
 
-    private static void reloadAddons(MyIterator<String> strings) {
+    private void reloadAddons(MyIterator<String> strings) {
         for (int i = 0; i < runningInstancesAdapter.size(); i++) {
-            MySocketConnection socket = runningInstancesAdapter.get(i).getSocket();
-            if (socket == null) continue;
+            RunningBlenderProcess instance = runningInstancesAdapter.get(i);
+            MySocketConnection socket = instance.getSocket();
+            if (socket == null) {
+                intellijConsoleInfoPrintLn(instance.getConsole(), "[On Save: ERROR - Socket connection lost]");
+                continue;
+            }
             socket.sendJsonData(new MyJsonNode()
                     .addKeyJsonString(CommunicationData.REQUEST, CommunicationData.REQUEST_PLUGIN_REFRESH)
                     .addKeyJsonArray(CommunicationData.REQUEST_PLUGIN_REFRESH_NAME_LIST, strings, MyJsonString::new)
             );
+            intellijConsoleInfoPrintLn(instance.getConsole(), "[On Save: Plugin reload request sent for:");
+            for (String s : strings) intellijConsoleInfoPrintLn(instance.getConsole(), " - " + s);
+            intellijConsoleInfoPrintLn(instance.getConsole(), "]");
         }
     }
 
@@ -193,7 +204,6 @@ public class BlenderToolWindow {
     private void onInstanceConnectionStart(MySocketConnection socket, RunningBlenderProcess runningBlenderProcess) {
         runningBlenderProcess.assignSocket(socket);
         blenderSettings.removeDeletedAddon(project);
-
         socket.sendJsonData(new MyJsonNode()
                 .addKeyJsonString(CommunicationData.REQUEST, CommunicationData.REQUEST_PLUGIN_FOLDER)
                 .addKeyJsonString(CommunicationData.REQUEST_PLUGIN_FOLDER_PROJECT_FOLDER, project.getBasePath())
@@ -209,13 +219,24 @@ public class BlenderToolWindow {
                 String currentPath = runningBlenderProcess.getInstance().addonPath;
                 if (currentPath == null || !currentPath.equals(addonPath)) {
                     runningBlenderProcess.getInstance().addonPath = addonPath;
-                    if (runningBlenderProcess.isDebug()) runningBlenderProcess.getProcess().destroyProcess();
+                    if (runningBlenderProcess.isDebug()) intentionalDebugRestart(runningBlenderProcess);
                 }
                 break;
             case CommunicationData.RESPONSE_PLUGIN_REFRESH:
                 root.get(CommunicationData.RESPONSE_PLUGIN_REFRESH_STATUS).getStringValue();
                 break;
         }
+    }
+
+    private void intentionalDebugRestart(RunningBlenderProcess runningBlenderProcess) {
+        runningBlenderProcess.getProcess().destroyProcess();
+        ApplicationManager.getApplication().invokeLater(this::onNewDebugInformationPopup);
+    }
+
+    private void onNewDebugInformationPopup() {
+        NewBlenderPopupWrapper.show("New Debug Information",
+                "The debug session has been terminated due to newer information.",
+                "This is totally normal on first executions, please restart the debug mode.");
     }
 
     private void onInstanceConnectionEnd(RunningBlenderProcess runningBlenderProcess) {
@@ -228,8 +249,8 @@ public class BlenderToolWindow {
      */
 
     @NotNull
-    private RunningBlenderProcess startBlenderProcess(boolean debugMode) throws ExecutionException {
-        return startBlenderProcess(debugMode, () -> {
+    private RunningBlenderProcess startBlenderProcess() throws ExecutionException {
+        return startBlenderProcess(false, () -> {
         });
     }
 
@@ -237,25 +258,7 @@ public class BlenderToolWindow {
     private RunningBlenderProcess startBlenderProcess(boolean debugMode, Runnable onEnd) throws ExecutionException {
         if (currentSocket.open()) {
             BlenderInstance instance = getSelectedBlenderInstance();
-            ArrayList<String> command = new ArrayList<>();
-
-            command.add(instance.path);
-            command.add("--python");
-            command.add(runningFile.getPath());
-            command.add("--");
-            if (debugMode && egg != null && egg.exists()) {
-                command.add("debug_mode");
-                command.add(".");
-                command.add("debug_port");
-                command.add(String.valueOf(debugPort));
-                command.add("debug_egg");
-                command.add(egg.getPath());
-            }
-
-            GeneralCommandLine generalCommandLine = new GeneralCommandLine(command);
-            generalCommandLine.setCharset(StandardCharsets.UTF_8);
-            generalCommandLine.setWorkDirectory(project.getBasePath());
-            OSProcessHandler processHandler = new OSProcessHandler(generalCommandLine);
+            OSProcessHandler processHandler = createBlenderProcessHandler(instance, debugMode, blenderSettings.data.showVerbose);
             RunningBlenderProcess runningBlenderProcess = new RunningBlenderProcess(instance, processHandler, debugMode);
 
             currentSocket.asyncWaitClient(new MySocketConnection.MySocketConnectionInterface() {
@@ -283,6 +286,32 @@ public class BlenderToolWindow {
         throw new ExecutionException("Socket not open!");
     }
 
+    private OSProcessHandler createBlenderProcessHandler(BlenderInstance instance, boolean debugMode, boolean print) throws ExecutionException {
+        ArrayList<String> command = new ArrayList<>();
+
+        command.add(instance.path);
+        command.add("--python");
+        command.add(runningFile.getPath());
+        command.add("--");
+        if (print) {
+            command.add("print_on");
+            command.add(".");
+        }
+        if (debugMode && egg != null && egg.exists()) {
+            command.add("debug_mode");
+            command.add(".");
+            command.add("debug_port");
+            command.add(String.valueOf(debugPort));
+            command.add("debug_egg");
+            command.add(egg.getPath());
+        }
+
+        GeneralCommandLine generalCommandLine = new GeneralCommandLine(command);
+        generalCommandLine.setCharset(StandardCharsets.UTF_8);
+        generalCommandLine.setWorkDirectory(project.getBasePath());
+        return new OSProcessHandler(generalCommandLine);
+    }
+
     /*
      *  Label Listener
      */
@@ -303,29 +332,39 @@ public class BlenderToolWindow {
         }
     }
 
-    private void onStartClick() {
-        if (validateFile(false)) {
-            try {
-                ConsoleView console = TextConsoleBuilderFactory.getInstance().createBuilder(project.getProject()).getConsole();
-
-                RunningBlenderProcess runningBlenderProcess = startBlenderProcess(false);
-                runningBlenderProcess.setComponent(console.getComponent());
-
-                setConsoleView(runningBlenderProcess);
-
-                console.attachToProcess(runningBlenderProcess.getProcess());
-                runningBlenderProcess.getProcess().startNotify();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private void setConsoleView(RunningBlenderProcess runningBlenderProcess) {
         consolePanel.removeAll();
         consolePanel.revalidate();
         consolePanel.repaint();
         consolePanel.add(runningBlenderProcess != null ? runningBlenderProcess.getComponent() : nullPanel, BorderLayout.CENTER);
+    }
+
+    private void destroyDebugInstance(RunContentDescriptor runContentDescriptor) {
+        if (runContentDescriptor.getProcessHandler() == null) return;
+        runContentDescriptor.getProcessHandler().destroyProcess();
+    }
+
+    private void intellijConsoleInfoPrintLn(ConsoleView console, String message) {
+        if (!blenderSettings.data.showVerbose) return;
+        console.print(message + "\n", ConsoleViewContentType.LOG_DEBUG_OUTPUT);
+    }
+
+    private void onStartClick() {
+        if (validateFile(false)) {
+            try {
+                ConsoleView console = TextConsoleBuilderFactory.getInstance().createBuilder(project.getProject()).getConsole();
+
+                RunningBlenderProcess runningBlenderProcess = startBlenderProcess();
+                runningBlenderProcess.setComponent(console.getComponent());
+
+                setConsoleView(runningBlenderProcess);
+
+                runningBlenderProcess.attachToProcess(console);
+                runningBlenderProcess.getProcess().startNotify();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void onDebugClick() {
@@ -345,23 +384,21 @@ public class BlenderToolWindow {
                 configuration.setSuspendAfterConnect(false);
 
                 configuration.setMappingSettings(new PathMappingSettings() {{
-                    add(new PathMapping(project.getBasePath(), getSelectedBlenderInstance().addonPath));
+                    add(new PathMapping(project.addonContainerPath(), getSelectedBlenderInstance().addonPath));
                 }});
-
-                ProgramRunner.Callback callback = runContentDescriptor -> {
-                    try {
-                        RunningBlenderProcess processHandler = startBlenderProcess(true);
-                        ((PythonDebugLanguageConsoleView) runContentDescriptor.getExecutionConsole()).attachToProcess(processHandler.getProcess());
-                        processHandler.getProcess().startNotify();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                };
 
                 Executor debugExecutorInstance = DefaultDebugExecutor.getDebugExecutorInstance();
                 ExecutionEnvironment executionEnvironment = ExecutionEnvironmentBuilder.create(project.getProject(), debugExecutorInstance, configuration).build();
-                executionEnvironment.setCallback(callback);
-                executionEnvironment.getRunner().execute(executionEnvironment);
+                ProgramRunnerUtil.executeConfigurationAsync(executionEnvironment, false, false, runContentDescriptor -> {
+                    try {
+                        RunningBlenderProcess runningBlenderProcess = startBlenderProcess(true, () -> destroyDebugInstance(runContentDescriptor));
+                        PythonDebugLanguageConsoleView console = ((PythonDebugLanguageConsoleView) runContentDescriptor.getExecutionConsole());
+                        runningBlenderProcess.attachToProcess(console);
+                        runningBlenderProcess.getProcess().startNotify();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                });
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }

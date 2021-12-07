@@ -29,10 +29,10 @@ Select the downloaded file and PyCharm will install the Plugin!
 The reason is that I do not think this plugin is good enough to fit in the 
 Marketplace. 
 
-Actually, I do not think it ready for be public on GitHub too, but maybe 
+Actually, I do not think it's ready for be public on GitHub too, but maybe 
 even if it's not perfect, it could be useful for someone.
 
-Maybe one day it will and it will be the right way to install the plugin.
+Maybe one day it will, and it will be the right way to install the plugin.
 
 ## Setting Up
 
@@ -76,14 +76,27 @@ you launch Blender from PyCharm.**
 
 If for any reason your Addon Folder doesn't have that icon, it means it's
 not marked as a Blender Addon Folder.
-You can fix it by right clicking it and go:
+You can fix it by right-clicking it and go:
 
 - `New -> Blend-Charm -> Mark as Addon Folder`
 
 You can unmark a folder too, in the same way.
 
-> Any addon must be on the root folder, 
-> no subdirectory will be able to be marked as Blender Addons. 
+> Any addon must be the project **Root Folder** or a **Child** of it!<br><br>
+> No other directory will be allowed to be marked as Blender Addons.
+
+### Marking the project root as a Blender Addon.
+
+Are you opening an existing add-on or do you just want to mark the whole project as a 
+Blender Addon?
+
+You can do it by right-clicking the project root folder and go:
+
+- `New -> Blend-Charm -> Mark as Addon Project`
+
+![](MarkDown/Gif/MarkProject.gif)
+
+This way you cannot have other Blender Addons other than the project itself.
 
 ## Features:
 

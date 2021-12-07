@@ -5,8 +5,8 @@
 <!-- Professional Edition - Self Update URL -->
 
 <plugins>
-    <plugin id="org.blackstartx.blend-charm" version="2021.2"
-            url="https://github.com/BlackStartx/PyCharm-Blender-Plugin/releases/download/v2021.2/Blend-Charm.2021.2.Professional.Edition.zip">
+    <plugin id="org.blackstartx.blend-charm" version="2021.3"
+            url="https://github.com/BlackStartx/PyCharm-Blender-Plugin/releases/download/v2021.3/Blend-Charm.2021.3.Professional.Edition.zip">
         <vendor email="xthewhitel@gmail.com" url="">BlackStartx</vendor>
         <name>Blend-Charm</name>
         <description>

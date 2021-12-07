@@ -1,5 +1,6 @@
 package data;
 
+import settings.BlenderSettings;
 import util.MyProjectHolder;
 import util.MyVirtualFileHelper;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -11,9 +12,11 @@ public class VirtualBlenderFile {
     private final BlenderSettings settings;
 
     private final VirtualFile selectedVirtualFile;
+    private final VirtualFile subRootVirtualFile;
     private final VirtualFile rootVirtualFile;
 
     public final boolean isRoot;
+    public final boolean isSubRoot;
 
     public VirtualBlenderFile(MyProjectHolder project, VirtualFile virtualFile) {
         this.project = project;
@@ -21,8 +24,10 @@ public class VirtualBlenderFile {
 
         VirtualFile parent = virtualFile.getParent();
 
-        this.isRoot = parent != null && parent.getPath().equals(project.getBasePath());
-        this.rootVirtualFile = this.isRoot ? virtualFile : MyVirtualFileHelper.getProjectFirstVirtualFile(project, virtualFile);
+        this.isRoot = parent != null && virtualFile.getPath().equals(project.getBasePath());
+        this.isSubRoot = parent != null && parent.getPath().equals(project.getBasePath());
+        this.subRootVirtualFile = this.isSubRoot ? virtualFile : MyVirtualFileHelper.getProjectFirstVirtualFile(project, virtualFile);
+        this.rootVirtualFile = project.projectVirtualFile;
         this.settings = BlenderSettings.getBlenderSettings(project);
     }
 
@@ -30,25 +35,43 @@ public class VirtualBlenderFile {
      *  Data
      */
 
-    public boolean isRootAndBlenderAddon() {
-        return isRoot && settings.isBlenderAddon(rootVirtualFile.getName());
+    public boolean isRootAndBlenderProject() {
+        return isRoot && settings.isBlenderProject();
+    }
+
+    public boolean isSubRootAndBlenderAddon() {
+        return isSubRoot && settings.isBlenderAddon(subRootVirtualFile.getName());
+    }
+
+    public boolean isBlenderAddon() {
+        return isRootAndBlenderProject() || isSubRootAndBlenderAddon();
     }
 
     public String getRelativeAddonName() {
-        return settings.isBlenderAddon(rootVirtualFile.getName()) ? rootVirtualFile.getName() : null;
+        return settings.isBlenderProject() ? rootVirtualFile.getName() : settings.isBlenderAddon(subRootVirtualFile.getName()) ? subRootVirtualFile.getName() : null;
     }
 
     public void markAsAddonFolder() {
-        if (isRootAndBlenderAddon()) return;
+        if (isSubRootAndBlenderAddon()) return;
 
-        settings.addBlenderAddon(rootVirtualFile.getName());
+        settings.addBlenderAddon(subRootVirtualFile.getName());
+        sync();
+    }
+
+    public void markAsAddonProject() {
+        settings.markAsAddonProject();
         sync();
     }
 
     public void unmarkAsAddonFolder() {
-        if (!isRootAndBlenderAddon()) return;
+        if (!isSubRootAndBlenderAddon()) return;
 
-        settings.removeBlenderAddon(rootVirtualFile.getName());
+        settings.removeBlenderAddon(subRootVirtualFile.getName());
+        sync();
+    }
+
+    public void unmarkAsAddonProject() {
+        settings.unmarkAsAddonProject();
         sync();
     }
 
@@ -56,13 +79,13 @@ public class VirtualBlenderFile {
         project.getProject().save();
     }
 
-    public VirtualFile getRootVirtualFile() {
-        return rootVirtualFile;
+    public VirtualFile getSubRootVirtualFile() {
+        return subRootVirtualFile;
     }
 
     public boolean isSource() {
-        for(VirtualFile f : ProjectRootManager.getInstance(project.getProject()).getContentSourceRoots()){
-            if(f.equals(selectedVirtualFile))
+        for (VirtualFile f : ProjectRootManager.getInstance(project.getProject()).getContentSourceRoots()) {
+            if (f.equals(selectedVirtualFile))
                 return true;
         }
         return false;
