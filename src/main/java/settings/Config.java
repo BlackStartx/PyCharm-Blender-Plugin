@@ -17,7 +17,7 @@ public class Config implements Configurable {
     public Config(Project project) {
         this.project = project;
         this.settings = BlenderSettings.getBlenderSettings(project);
-        this.checkBox = new JBCheckBox("Enable verbose:", settings.data.showVerbose);
+        this.checkBox = new JBCheckBox("Enable verbose.", settings.data.showVerbose);
     }
 
     @Override
