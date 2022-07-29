@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.blackstartx'
-version '2022.1'
+version '2022.2'
 
 sourceCompatibility = 1.8
 
@@ -19,7 +19,7 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     plugins = ["python"]
-    version = "PY-2022.1"
+    version = "PY-2022.2"
     type = 'PY'
 }
 patchPluginXml {
