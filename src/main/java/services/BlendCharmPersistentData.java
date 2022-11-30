@@ -18,9 +18,8 @@ public class BlendCharmPersistentData implements PersistentStateComponent<Blende
 
     private BlenderSettingsRaw blenderSettingsRaw = new BlenderSettingsRaw();
 
-    @NotNull
     @Override
-    public BlenderSettingsRaw getState() {
+    public @NotNull BlenderSettingsRaw getState() {
         return blenderSettingsRaw;
     }
 

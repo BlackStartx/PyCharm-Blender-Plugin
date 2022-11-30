@@ -20,16 +20,14 @@ public class BlenderSettingsRaw {
 
     public static class BlenderSettingsConverter extends Converter<BlenderSettingsData> {
 
-        @Nullable
         @Override
-        public BlenderSettingsData fromString(@NotNull String value) {
+        public @Nullable BlenderSettingsData fromString(@NotNull String value) {
             StringReader reader = new StringReader(value);
             return JAXB.unmarshal(reader, BlenderSettingsData.class);
         }
 
         @Override
-        public @Nullable
-        String toString(@NotNull BlenderSettingsData value) {
+        public @Nullable String toString(@NotNull BlenderSettingsData value) {
             StringWriter sw = new StringWriter();
             JAXB.marshal(value, sw);
             return sw.toString();

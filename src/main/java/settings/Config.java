@@ -4,7 +4,6 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.FormBuilder;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -26,8 +25,7 @@ public class Config implements Configurable {
     }
 
     @Override
-    public @Nullable
-    JComponent createComponent() {
+    public JComponent createComponent() {
         return FormBuilder.createFormBuilder()
                 .addComponent(checkBox, 1)
                 .addComponentFillVertically(new JPanel(), 0)

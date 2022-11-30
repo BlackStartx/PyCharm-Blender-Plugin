@@ -15,9 +15,9 @@ public class BlIdLowercase extends LocalInspectionTool {
     private static final String value = "bl_id" + "name";
     private static final String description = "Blender: Id should be lowercase in order to be registered in to Blender.";
 
+    @NotNull
     @Override
-    public @NotNull
-    PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
+    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         return new PyElementVisitor() {
             @Override
             public void visitPyAssignmentStatement(@NotNull PyAssignmentStatement node) {
@@ -39,16 +39,12 @@ public class BlIdLowercase extends LocalInspectionTool {
     private static class BlIdLowercaseFix implements LocalQuickFix {
 
         @Override
-        public @IntentionName
-        @NotNull
-        String getName() {
+        public @IntentionName @NotNull String getName() {
             return "Convert to lowercase";
         }
 
         @Override
-        public @IntentionFamilyName
-        @NotNull
-        String getFamilyName() {
+        public @IntentionFamilyName @NotNull String getFamilyName() {
             return getName();
         }
 
