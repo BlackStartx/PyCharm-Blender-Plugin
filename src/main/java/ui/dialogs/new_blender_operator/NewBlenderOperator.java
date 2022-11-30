@@ -8,14 +8,11 @@ import javax.swing.*;
 
 public class NewBlenderOperator extends JDialog {
 
-    private final Project project;
-
     private JPanel contentPane;
     private JTextField label;
     private JTextField idName;
 
     public NewBlenderOperator(@NotNull Project project) {
-        this.project = project;
         setContentPane(contentPane);
     }
 

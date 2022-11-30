@@ -1,12 +1,10 @@
 package data;
 
 import com.intellij.execution.ui.ConsoleView;
-import com.jetbrains.python.console.PythonDebugLanguageConsoleView;
 import util.core.socket.MySocketConnection;
 import com.intellij.execution.process.OSProcessHandler;
 
 import javax.swing.*;
-import java.util.ArrayList;
 
 public class RunningBlenderProcess {
 

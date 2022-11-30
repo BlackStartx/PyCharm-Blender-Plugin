@@ -16,9 +16,8 @@ public class BlendCharmRepositoryIconManager extends IconProvider {
     @Nullable
     @Override
     public Icon getIcon(@NotNull PsiElement psiElement, int i) {
-        if (!(psiElement instanceof PsiDirectoryImpl)) return null;
+        if (!(psiElement instanceof PsiDirectoryImpl c)) return null;
 
-        PsiDirectoryImpl c = ((PsiDirectoryImpl) psiElement);
         VirtualFile virtualFile = c.getVirtualFile();
         MyProjectHolder project = new MyProjectHolder(psiElement.getProject());
 

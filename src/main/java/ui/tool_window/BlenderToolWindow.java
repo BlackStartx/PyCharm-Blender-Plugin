@@ -186,9 +186,12 @@ public class BlenderToolWindow {
         if (dirs.exists() || dirs.mkdirs()) {
             try {
                 if (runningFile.createNewFile()) {
-                    OutputStream outStream = new FileOutputStream(runningFile);
-                    outStream.write(realContent.getBytes());
-                    return true;
+                    try (OutputStream outStream = new FileOutputStream(runningFile)) {
+                        outStream.write(realContent.getBytes());
+                        return true;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -214,17 +217,15 @@ public class BlenderToolWindow {
     private void onInstanceMessage(MySocketConnection.Data message, RunningBlenderProcess runningBlenderProcess) {
         MyJsonObject<?> root = new MyJsonParser().parse(message.getStringData());
         switch (root.get(CommunicationData.RESPONSE).getIntValue()) {
-            case CommunicationData.RESPONSE_PLUGIN_FOLDER:
+            case CommunicationData.RESPONSE_PLUGIN_FOLDER -> {
                 String addonPath = root.get(CommunicationData.RESPONSE_PLUGIN_FOLDER_PLUGIN_PATH).getStringValue();
                 String currentPath = runningBlenderProcess.getInstance().addonPath;
                 if (currentPath == null || !currentPath.equals(addonPath)) {
                     runningBlenderProcess.getInstance().addonPath = addonPath;
                     if (runningBlenderProcess.isDebug()) intentionalDebugRestart(runningBlenderProcess);
                 }
-                break;
-            case CommunicationData.RESPONSE_PLUGIN_REFRESH:
-                root.get(CommunicationData.RESPONSE_PLUGIN_REFRESH_STATUS).getStringValue();
-                break;
+            }
+            case CommunicationData.RESPONSE_PLUGIN_REFRESH -> root.get(CommunicationData.RESPONSE_PLUGIN_REFRESH_STATUS).getStringValue();
         }
     }
 
@@ -324,7 +325,7 @@ public class BlenderToolWindow {
     private void onRemoveClick() {
         if (getSelectedBlenderInstance() == null) return;
 
-        RemoveBlenderInstanceWrapper dialog = new RemoveBlenderInstanceWrapper(project.getProject());
+        RemoveBlenderInstanceWrapper dialog = new RemoveBlenderInstanceWrapper();
         if (dialog.showAndGet()) {
             blenderSettings.removeBlenderInstances(getSelectedBlenderInstance());
             blenderInstances.removeItem(getSelectedBlenderInstance());

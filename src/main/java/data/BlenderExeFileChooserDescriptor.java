@@ -11,6 +11,7 @@ public class BlenderExeFileChooserDescriptor extends FileChooserDescriptor {
 
     @Override
     public boolean isFileSelectable(VirtualFile file) {
+        if (file == null) return false;
         String extension = file.getExtension();
         return extension != null && extension.toLowerCase().equals("exe");
     }

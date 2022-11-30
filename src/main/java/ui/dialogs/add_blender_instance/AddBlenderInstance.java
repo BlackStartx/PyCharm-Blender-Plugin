@@ -13,15 +13,12 @@ import javax.swing.*;
 
 public class AddBlenderInstance extends JDialog {
 
-    private final Project project;
-
     private JPanel contentPane;
     private JTextField path;
     private JTextField name;
     private JLabel explore;
 
     AddBlenderInstance(@NotNull Project project) {
-        this.project = project;
         setContentPane(contentPane);
         MySwingUtil.setLabelOnClickListener(explore, () -> onExploreClick(project));
     }

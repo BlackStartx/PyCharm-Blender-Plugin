@@ -8,8 +8,6 @@ import javax.swing.*;
 
 public class NewBlenderPanel extends JDialog {
 
-    private final Project project;
-
     private JPanel contentPane;
     private JTextField label;
     private JTextField category;
@@ -17,7 +15,6 @@ public class NewBlenderPanel extends JDialog {
     private JComboBox<String> spaces;
 
     public NewBlenderPanel(@NotNull Project project) {
-        this.project = project;
         setContentPane(contentPane);
 
         setRegions();

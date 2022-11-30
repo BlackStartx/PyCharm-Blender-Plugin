@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 
 public class NewBlenderAddon extends JDialog {
 
-    private final Project project;
     private final Action okAction;
 
     private JPanel contentPane;
@@ -19,7 +18,6 @@ public class NewBlenderAddon extends JDialog {
     private JTextField addon_description;
 
     public NewBlenderAddon(@NotNull Project project, @NotNull Action okAction) {
-        this.project = project;
         this.okAction = okAction;
         this.okAction.setEnabled(false);
 

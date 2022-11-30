@@ -40,7 +40,7 @@ public class BlenderConsoleFilter implements ConsoleFilterProvider {
                     String localFile = blenderFile.replace(instance.addonPath, projectPath).replace("\\", "/");
 
                     int fileStart = start + index;
-                    int line = TryGetLine(s);
+                    int line = tryGetLine(s);
                     LazyFileHyperlinkInfo hyperlinkInfo = new LazyFileHyperlinkInfo(project, localFile, line, 0);
                     return new Result(fileStart, fileStart + blenderFile.length(), hyperlinkInfo);
                 }
@@ -54,7 +54,7 @@ public class BlenderConsoleFilter implements ConsoleFilterProvider {
          * @param msg the message from the console.
          * @return the line the msg is referring to.
          */
-        private int TryGetLine(String msg) {
+        private int tryGetLine(String msg) {
             try {
                 return Integer.parseInt(msg.split("line ")[1].split(", ")[0]) - 1;
             } catch (Exception ignored) {
