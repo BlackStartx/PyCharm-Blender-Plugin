@@ -108,7 +108,7 @@
                     </constraints>
                     <properties>
                       <horizontalTextPosition value="0"/>
-                      <icon value="Icons/blender_logo_gray_big.png"/>
+                      <icon value="icons/blender_logo_gray_big.png"/>
                       <text value="No Blender Instance Running..."/>
                       <verticalTextPosition value="3"/>
                     </properties>
