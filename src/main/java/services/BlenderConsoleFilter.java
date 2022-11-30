@@ -8,9 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BlenderConsoleFilter implements ConsoleFilterProvider {
-    @NotNull
     @Override
-    public Filter[] getDefaultFilters(@NotNull Project project) {
+    public Filter @NotNull [] getDefaultFilters(@NotNull Project project) {
         return new Filter[]{new BlenderLinkFilter(project)};
     }
 

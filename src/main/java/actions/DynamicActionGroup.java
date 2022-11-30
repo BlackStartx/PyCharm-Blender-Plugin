@@ -11,9 +11,8 @@ import java.util.ArrayList;
 
 public class DynamicActionGroup extends ActionGroup {
 
-    @NotNull
     @Override
-    public AnAction[] getChildren(@Nullable AnActionEvent anActionEvent) {
+    public AnAction @NotNull [] getChildren(@Nullable AnActionEvent anActionEvent) {
         if (anActionEvent == null) return new AnAction[0];
 
         MyProjectHolder project = new MyProjectHolder(anActionEvent.getProject());

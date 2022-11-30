@@ -26,9 +26,8 @@ public class NewBlenderPopupWrapper extends DialogWrapper {
         setTitle(title);
     }
 
-    @NotNull
     @Override
-    protected Action[] createActions() {
+    protected Action @NotNull [] createActions() {
         return new Action[]{this.getOKAction()};
     }
 
