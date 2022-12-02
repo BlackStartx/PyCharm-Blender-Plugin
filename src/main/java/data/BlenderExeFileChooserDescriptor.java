@@ -4,7 +4,11 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import java.util.Set;
+
 public class BlenderExeFileChooserDescriptor extends FileChooserDescriptor {
+    private static final Set<String> extensions = Set.of("exe", "app");
+
     public BlenderExeFileChooserDescriptor() {
         super(true, false, false, false, false, false);
     }
@@ -13,7 +17,7 @@ public class BlenderExeFileChooserDescriptor extends FileChooserDescriptor {
     public boolean isFileSelectable(VirtualFile file) {
         if (file == null) return false;
         String extension = file.getExtension();
-        return extension != null && extension.toLowerCase().equals("exe");
+        return extension != null && extensions.contains(extension.toLowerCase());
     }
 
     @Override
@@ -22,6 +26,6 @@ public class BlenderExeFileChooserDescriptor extends FileChooserDescriptor {
         if (file.isDirectory()) return true;
 
         String extension = file.getExtension();
-        return extension != null && extension.toLowerCase().equals("exe");
+        return extension != null && extensions.contains(extension.toLowerCase());
     }
 }

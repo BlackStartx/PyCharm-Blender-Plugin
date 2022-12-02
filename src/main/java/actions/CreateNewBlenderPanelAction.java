@@ -1,15 +1,15 @@
 package actions;
 
-import data.VirtualBlenderFile;
-import util.core.MyFileUtils;
-import util.MyInputStreamHelper;
-import util.MyProjectHolder;
-import ui.dialogs.new_blender_panel.NewBlenderPanelWrapper;
 import com.intellij.history.core.Paths;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl;
+import data.VirtualBlenderFile;
 import org.jetbrains.annotations.NotNull;
+import ui.dialogs.new_blender_panel.NewBlenderPanelWrapper;
+import util.MyInputStreamHelper;
+import util.MyProjectHolder;
+import util.core.MyFileUtils;
 
 public class CreateNewBlenderPanelAction extends AnAction {
 
@@ -36,9 +36,8 @@ public class CreateNewBlenderPanelAction extends AnAction {
             stream = stream.replace("$SPACE_TYPE$", dialog.form.getSpaceType());
             stream = stream.replace("$REGION_TYPE$", dialog.form.getRegionType());
 
-            MyFileUtils.createDirIfNotExist(panelsPath);
+            if (!MyFileUtils.createDirIfNotExist(panelsPath)) return;
             MyFileUtils.writeText(Paths.appended(panelsPath, dialog.form.getPanelFileName()), stream);
-
             LocalFileSystemImpl.getInstance().refresh(true);
         }
     }

@@ -9,9 +9,7 @@ public class MyFileUtils {
 
     public static boolean createDirIfNotExist(String path) {
         File file = new File(path);
-        if (!file.exists())
-            return file.mkdirs();
-        return file.isDirectory();
+        return !file.exists() ? file.mkdirs() : file.isDirectory();
     }
 
     public static String readText(String path) {
