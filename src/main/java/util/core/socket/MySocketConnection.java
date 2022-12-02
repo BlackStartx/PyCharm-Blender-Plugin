@@ -1,12 +1,12 @@
 package util.core.socket;
 
 import org.json.JSONObject;
-import util.core.MyByteConversion;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 public class MySocketConnection {
     public final Socket socket;
@@ -28,7 +28,7 @@ public class MySocketConnection {
         int unused = inp.read(myId);
         byte[] myLen = new byte[4];
         int lenLen = inp.read(myLen);
-        byte[] myPacket = new byte[MyByteConversion.byteToInt(myLen)];
+        byte[] myPacket = new byte[ByteBuffer.wrap(myLen).getInt()];
         int packetLen = inp.read(myPacket);
         return new Data(myId[0], myPacket);
     }
@@ -53,7 +53,7 @@ public class MySocketConnection {
 
     public void sendData(byte id, byte[] array) {
         new Thread(() -> {
-            byte[] newArray = MyByteConversion.intToByteArray(array.length);
+            byte[] newArray = Data.intToByteArray(array.length);
             try {
                 outputStream.write(id);
                 outputStream.write(newArray);
@@ -100,6 +100,10 @@ public class MySocketConnection {
             this.data = data;
         }
 
+        public static byte[] intToByteArray(int a) {
+            return new byte[]{(byte) ((a >> 24) & 0xFF), (byte) ((a >> 16) & 0xFF), (byte) ((a >> 8) & 0xFF), (byte) (a & 0xFF)};
+        }
+
         public byte getId() {
             return id;
         }
@@ -109,7 +113,7 @@ public class MySocketConnection {
         }
 
         public String getStringData() {
-            return MyByteConversion.byteToString(data);
+            return new String(data);
         }
     }
 }

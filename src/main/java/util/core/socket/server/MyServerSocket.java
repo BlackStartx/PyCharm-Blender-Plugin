@@ -32,7 +32,6 @@ public class MyServerSocket {
             try {
                 new MySocketConnection(this.serverSocket.accept(), socketConnectionInterface);
             } catch (IOException ignored) {
-
             }
         }).start();
     }
