@@ -26,11 +26,6 @@ public class MyIterator<T> implements Iterable<T> {
         }
     }
 
-    public boolean any(MyInterfaces.Function1<T, Boolean> iterateFunc) {
-        for (T element : current) if (iterateFunc.run(element)) return true;
-        return false;
-    }
-
     public MyIterator<T> where(MyInterfaces.Function1<T, Boolean> iterateFunc) {
         ArrayList<T> toRet = new ArrayList<>();
         indexIterate((index, element) -> {
@@ -44,18 +39,6 @@ public class MyIterator<T> implements Iterable<T> {
         indexIterate((index, element) -> {
             if (iterateFunc.run(element, index)) toRet.add(element);
         });
-        return new MyIterator<>(toRet);
-    }
-
-    public <R> MyIterator<R> select(MyInterfaces.Function1<T, R> forEachInterface) {
-        ArrayList<R> toRet = new ArrayList<>();
-        for (T t : current) toRet.add(forEachInterface.run(t));
-        return new MyIterator<>(toRet);
-    }
-
-    public <R> MyIterator<R> select(MyInterfaces.Function2<Integer, T, R> iterateFunc) {
-        ArrayList<R> toRet = new ArrayList<>();
-        indexIterate((index, element) -> toRet.add(iterateFunc.run(index, element)));
         return new MyIterator<>(toRet);
     }
 

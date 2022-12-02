@@ -4,14 +4,13 @@ import com.intellij.execution.*;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.RunContentDescriptor;
 import data.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import settings.BlenderSettings;
 import ui.dialogs.blender_popup.NewBlenderPopupWrapper;
 import util.core.MyFileUtils;
 import util.core.MyIterator;
-import util.core.json_util.MyJsonParser;
-import util.core.json_util.values.MyJsonNode;
-import util.core.json_util.values.MyJsonObject;
-import util.core.json_util.values.MyJsonString;
 import util.core.socket.server.MyServerSocket;
 import util.core.socket.MySocketConnection;
 import util.MyInputStreamHelper;
@@ -131,9 +130,9 @@ public class BlenderToolWindow {
                 intellijConsoleInfoPrintLn(instance.getConsole(), "[On Save: ERROR - Socket connection lost]");
                 continue;
             }
-            socket.sendJsonData(new MyJsonNode()
-                    .addKeyJsonString(CommunicationData.REQUEST, CommunicationData.REQUEST_PLUGIN_REFRESH)
-                    .addKeyJsonArray(CommunicationData.REQUEST_PLUGIN_REFRESH_NAME_LIST, strings, MyJsonString::new)
+            socket.sendJsonData(new JSONObject()
+                    .put(CommunicationData.REQUEST, CommunicationData.REQUEST_PLUGIN_REFRESH)
+                    .put(CommunicationData.REQUEST_PLUGIN_REFRESH_NAME_LIST, new JSONArray().putAll(strings))
             );
             intellijConsoleInfoPrintLn(instance.getConsole(), "[On Save: Plugin reload request sent for:");
             for (String s : strings) intellijConsoleInfoPrintLn(instance.getConsole(), " - " + s);
@@ -207,25 +206,25 @@ public class BlenderToolWindow {
     private void onInstanceConnectionStart(MySocketConnection socket, RunningBlenderProcess runningBlenderProcess) {
         runningBlenderProcess.assignSocket(socket);
         blenderSettings.removeDeletedAddon(project);
-        socket.sendJsonData(new MyJsonNode()
-                .addKeyJsonString(CommunicationData.REQUEST, CommunicationData.REQUEST_PLUGIN_FOLDER)
-                .addKeyJsonString(CommunicationData.REQUEST_PLUGIN_FOLDER_PROJECT_FOLDER, project.getBasePath())
-                .addKeyJsonArray(CommunicationData.REQUEST_PLUGIN_FOLDER_ADDON_NAMES, blenderSettings.getBlenderAddons(), MyJsonString::new)
+        socket.sendJsonData(new JSONObject()
+                .put(CommunicationData.REQUEST, CommunicationData.REQUEST_PLUGIN_FOLDER)
+                .put(CommunicationData.REQUEST_PLUGIN_FOLDER_PROJECT_FOLDER, project.getBasePath())
+                .put(CommunicationData.REQUEST_PLUGIN_FOLDER_ADDON_NAMES, new JSONArray().putAll(blenderSettings.getBlenderAddons()))
         );
     }
 
     private void onInstanceMessage(MySocketConnection.Data message, RunningBlenderProcess runningBlenderProcess) {
-        MyJsonObject<?> root = new MyJsonParser().parse(message.getStringData());
-        switch (root.get(CommunicationData.RESPONSE).getIntValue()) {
+        JSONObject root = new JSONObject(new JSONTokener(message.getStringData()));
+        switch (root.getInt(CommunicationData.RESPONSE)) {
             case CommunicationData.RESPONSE_PLUGIN_FOLDER -> {
-                String addonPath = root.get(CommunicationData.RESPONSE_PLUGIN_FOLDER_PLUGIN_PATH).getStringValue();
+                String addonPath = root.getString(CommunicationData.RESPONSE_PLUGIN_FOLDER_PLUGIN_PATH);
                 String currentPath = runningBlenderProcess.getInstance().addonPath;
                 if (currentPath == null || !currentPath.equals(addonPath)) {
                     runningBlenderProcess.getInstance().addonPath = addonPath;
                     if (runningBlenderProcess.isDebug()) intentionalDebugRestart(runningBlenderProcess);
                 }
             }
-            case CommunicationData.RESPONSE_PLUGIN_REFRESH -> root.get(CommunicationData.RESPONSE_PLUGIN_REFRESH_STATUS).getStringValue();
+            case CommunicationData.RESPONSE_PLUGIN_REFRESH -> root.getString(CommunicationData.RESPONSE_PLUGIN_REFRESH_STATUS);
         }
     }
 

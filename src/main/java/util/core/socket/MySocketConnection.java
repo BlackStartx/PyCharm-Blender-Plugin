@@ -1,8 +1,7 @@
 package util.core.socket;
 
+import org.json.JSONObject;
 import util.core.MyByteConversion;
-import util.core.MyInterfaces;
-import util.core.json_util.values.MyJsonObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,30 +9,18 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class MySocketConnection {
-
     public final Socket socket;
 
     private final MySocketConnectionInterface connectionInterface;
     private final OutputStream outputStream;
-    private final MyInterfaces.Action1<MySocketConnection> onClose;
-
     private Thread listeningThread;
 
-    public MySocketConnection(Socket socket, MySocketConnectionInterface connectionInterface, MyInterfaces.Action1<MySocketConnection> onClose) {
+    public MySocketConnection(Socket socket, MySocketConnectionInterface connectionInterface) {
         this.socket = socket;
         this.connectionInterface = connectionInterface;
-        this.onClose = onClose;
         this.outputStream = GetOutputStream();
 
         startListeningThread();
-    }
-
-    private OutputStream GetOutputStream() {
-        try {
-            return socket.getOutputStream();
-        } catch (IOException e) {
-            return null;
-        }
     }
 
     private static Data readData(InputStream inp) throws IOException {
@@ -46,14 +33,21 @@ public class MySocketConnection {
         return new Data(myId[0], myPacket);
     }
 
-    public void sendJsonData(MyJsonObject<?> myJsonDocument) {
-        sendData((byte) 4, myJsonDocument.getJsonString().getBytes());
+    private OutputStream GetOutputStream() {
+        try {
+            return socket.getOutputStream();
+        } catch (IOException e) {
+            return null;
+        }
     }
 
-    public void close(boolean sendData, boolean runOnCloseListener) {
+    public void sendJsonData(JSONObject myJsonDocument) {
+        sendData((byte) 4, myJsonDocument.toString().getBytes());
+    }
+
+    public void close(boolean sendData) {
         if (sendData) sendData((byte) 0, new byte[]{0});
         connectionInterface.onEnd(this);
-        if(runOnCloseListener) onClose.run(this);
         listeningThread.interrupt();
     }
 
@@ -81,10 +75,9 @@ public class MySocketConnection {
                     if (data.getId() == 0) break;
                     connectionInterface.onMessage(this, data);
                 }
-                close(true, true);
+                close(true);
             } catch (IOException e) {
-                // The connection has been shut-down.
-                close(false, true);
+                close(false);
             }
         });
         listeningThread.start();
