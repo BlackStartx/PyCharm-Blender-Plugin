@@ -18,22 +18,25 @@ public class MySocketConnection {
     public MySocketConnection(Socket socket, MySocketConnectionInterface connectionInterface) {
         this.socket = socket;
         this.connectionInterface = connectionInterface;
-        this.outputStream = GetOutputStream();
+        this.outputStream = getOutputStream();
 
         startListeningThread();
     }
 
     private static Data readData(InputStream inp) throws IOException {
-        byte[] myId = new byte[1];
-        int unused = inp.read(myId);
-        byte[] myLen = new byte[4];
-        int lenLen = inp.read(myLen);
-        byte[] myPacket = new byte[ByteBuffer.wrap(myLen).getInt()];
-        int packetLen = inp.read(myPacket);
-        return new Data(myId[0], myPacket);
+        byte[] id = new byte[1];
+        if (!read(inp, id)) return null;
+        byte[] len = new byte[4];
+        if (!read(inp, len)) return null;
+        byte[] packet = new byte[ByteBuffer.wrap(len).getInt()];
+        return read(inp, packet) ? new Data(id[0], packet) : null;
     }
 
-    private OutputStream GetOutputStream() {
+    private static boolean read(InputStream inp, byte[] array) throws IOException {
+        return array.length == inp.read(array);
+    }
+
+    private OutputStream getOutputStream() {
         try {
             return socket.getOutputStream();
         } catch (IOException e) {
@@ -41,8 +44,8 @@ public class MySocketConnection {
         }
     }
 
-    public void sendJsonData(JSONObject myJsonDocument) {
-        sendData((byte) 4, myJsonDocument.toString().getBytes());
+    public void sendJsonData(JSONObject jsonObject) {
+        sendData((byte) 4, jsonObject.toString().getBytes());
     }
 
     public void close(boolean sendData) {
@@ -72,6 +75,7 @@ public class MySocketConnection {
                 InputStream inputStream = socket.getInputStream();
                 while (!socket.isClosed()) {
                     Data data = readData(inputStream);
+                    if (data == null) continue;
                     if (data.getId() == 0) break;
                     connectionInterface.onMessage(this, data);
                 }
