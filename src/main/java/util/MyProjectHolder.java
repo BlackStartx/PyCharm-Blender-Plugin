@@ -10,8 +10,8 @@ import java.net.URL;
 
 public class MyProjectHolder {
 
-    private final Project project;
     public final VirtualFile projectVirtualFile;
+    private final Project project;
 
     public MyProjectHolder(Project project) {
         this.project = project;
