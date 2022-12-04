@@ -13,10 +13,10 @@ import pathlib
 # noinspection PyUnresolvedReferences
 import bpy
 
-my_args = {}
+argv = {}
 if "--" in sys.argv:
     args_list = sys.argv[sys.argv.index("--") + 1:]
-    my_args = {args_list[i - 1]: args_list[i] for i in range(1, len(args_list), 2)}
+    argv = {args_list[i - 1]: args_list[i] for i in range(1, len(args_list), 2)}
 
 # # # # # # # # #
 #  Main Thread  #
@@ -76,13 +76,13 @@ debug_egg = None
 # Cmd Params: #
 # # # # # # # #
 
-if "debug_mode" in my_args:
+if "debug_mode" in argv:
     debug_mode = True
-if "debug_port" in my_args:
-    debug_port = int(my_args["debug_port"])
-if "debug_egg" in my_args:
-    debug_egg = my_args["debug_egg"]
-if "print_on" in my_args:
+if "debug_port" in argv:
+    debug_port = int(argv["debug_port"])
+if "debug_egg" in argv:
+    debug_egg = argv["debug_egg"]
+if "print_on" in argv:
     print_on = True
 
 
@@ -90,18 +90,18 @@ def send_json_string(client, string):
     client.send(struct.pack('>b', 4) + struct.pack('>I', len(string)) + str.encode(string))
 
 
-def my_print(text):
+def log(text):
     if print_on:
         run_in_main_thread(lambda: logging.info(text))
 
 
 # noinspection PyUnresolvedReferences,PyBroadException
 def on_data(client: socket, data: bytes):
-    my_print("[Blend-Charm] -- Data Received --")
+    log("[Blend-Charm] -- Data Received --")
     json_data = json.loads(data)
     request_id = json_data[request]
     if request_id == request_plugin_folder:
-        my_print("[Blend-Charm] ---- Request Plugin Folder ----")
+        log("[Blend-Charm] ---- Request Plugin Folder ----")
         project = json_data[request_plugin_folder_project_folder]
         project_name = os.path.split(project)[1]
 
@@ -118,17 +118,17 @@ def on_data(client: socket, data: bytes):
                 sym_link(src, dst)
             try:
                 bpy.ops.preferences.addon_enable(module=addon)
-                my_print("[Blend-Charm] ------ Enabled Addon: " + addon + " ------")
+                log("[Blend-Charm] ------ Enabled Addon: " + addon + " ------")
             except Exception:
                 traceback.print_exc()
-                my_print("[Blend-Charm] ------ Failed Enabling Addon: " + addon + " ------")
+                log("[Blend-Charm] ------ Failed Enabling Addon: " + addon + " ------")
 
         send_json_string(client, json.dumps({
             response: response_plugin_folder,
             response_plugin_folder_plugin_path: script_folder
         }))
     if request_id == request_plugin_refresh:
-        my_print("[Blend-Charm] ---- Data: Refresh ----")
+        log("[Blend-Charm] ---- Data: Refresh ----")
         run_in_main_thread(lambda: reload_addons(json_data[request_plugin_refresh_name_list]))
 
 
@@ -148,10 +148,10 @@ def start_client():
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect(('localhost', 8525))
             while True:
-                my_print("[Blend-Charm] Waiting For Data...")
+                log("[Blend-Charm] Waiting For Data...")
                 data_id_value = struct.unpack('>b', s.recv(1))[0]
                 if data_id_value == 0:
-                    my_print("[Blend-Charm] -- Closed Connection --")
+                    log("[Blend-Charm] -- Closed Connection --")
                     break
                 on_data(s, s.recv(struct.unpack('>i', s.recv(4))[0]))
     except socket.error:
@@ -169,7 +169,7 @@ def connect_to_pycharm_debugger(egg_path: str, server_port: int):
 
 def reload_addons(module_list):
     for module in module_list:
-        my_print("[Blend-Charm] ------ Reloading: " + module + " ------")
+        log("[Blend-Charm] ------ Reloading: " + module + " ------")
         reload_add_on(module)
 
 
