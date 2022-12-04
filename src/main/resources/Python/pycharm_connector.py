@@ -97,11 +97,11 @@ def my_print(text):
 
 # noinspection PyUnresolvedReferences,PyBroadException
 def on_data(client: socket, data: bytes):
-    my_print("[My Socket] -- Data Received --")
+    my_print("[Blend-Charm] -- Data Received --")
     json_data = json.loads(data)
     request_id = json_data[request]
     if request_id == request_plugin_folder:
-        my_print("[My Socket] ---- Request Plugin Folder ----")
+        my_print("[Blend-Charm] ---- Request Plugin Folder ----")
         project = json_data[request_plugin_folder_project_folder]
         project_name = os.path.split(project)[1]
 
@@ -118,17 +118,17 @@ def on_data(client: socket, data: bytes):
                 sym_link(src, dst)
             try:
                 bpy.ops.preferences.addon_enable(module=addon)
-                my_print("[My Socket] ------ Enabled Addon: " + addon + " ------")
+                my_print("[Blend-Charm] ------ Enabled Addon: " + addon + " ------")
             except Exception:
                 traceback.print_exc()
-                my_print("[My Socket] ------ Failed Enabling Addon: " + addon + " ------")
+                my_print("[Blend-Charm] ------ Failed Enabling Addon: " + addon + " ------")
 
         send_json_string(client, json.dumps({
             response: response_plugin_folder,
             response_plugin_folder_plugin_path: script_folder
         }))
     if request_id == request_plugin_refresh:
-        my_print("[My Socket] ---- Data: Refresh ----")
+        my_print("[Blend-Charm] ---- Data: Refresh ----")
         run_in_main_thread(lambda: reload_addons(json_data[request_plugin_refresh_name_list]))
 
 
@@ -148,10 +148,10 @@ def start_client():
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect(('localhost', 8525))
             while True:
-                my_print("[My Socket] Waiting For Data...")
+                my_print("[Blend-Charm] Waiting For Data...")
                 data_id_value = struct.unpack('>b', s.recv(1))[0]
                 if data_id_value == 0:
-                    my_print("[My Socket] -- Closed Connection --")
+                    my_print("[Blend-Charm] -- Closed Connection --")
                     break
                 on_data(s, s.recv(struct.unpack('>i', s.recv(4))[0]))
     except socket.error:
@@ -169,7 +169,7 @@ def connect_to_pycharm_debugger(egg_path: str, server_port: int):
 
 def reload_addons(module_list):
     for module in module_list:
-        my_print("[My Socket] ------ Reloading: " + module + " ------")
+        my_print("[Blend-Charm] ------ Reloading: " + module + " ------")
         reload_add_on(module)
 
 
