@@ -195,6 +195,7 @@ def reload_add_on(module_name):
         for area in window.screen.areas:
             area.tag_redraw()
 
+    run_in_main_thread(lambda: logging.info(f"[Blend-Charm] Reloaded add-on: {module_name}"))
     return {'FINISHED'}
 
 
