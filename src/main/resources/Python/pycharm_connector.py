@@ -7,6 +7,7 @@ import subprocess
 import sys
 import threading
 import traceback
+import logging
 import pathlib
 
 # noinspection PyUnresolvedReferences
@@ -91,7 +92,7 @@ def send_json_string(client, string):
 
 def my_print(text):
     if print_on:
-        run_in_main_thread(lambda: print(text))
+        run_in_main_thread(lambda: logging.info(text))
 
 
 # noinspection PyUnresolvedReferences,PyBroadException
