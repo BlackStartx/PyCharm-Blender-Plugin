@@ -59,8 +59,7 @@ public class RunningBlenderProcess {
         this.component = component;
     }
 
-    public void attachToProcess(ConsoleView console) {
+    public void setConsole(ConsoleView console) {
         this.console = console;
-        this.console.attachToProcess(getProcess());
     }
 }

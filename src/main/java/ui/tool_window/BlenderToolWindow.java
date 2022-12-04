@@ -359,7 +359,8 @@ public class BlenderToolWindow {
 
                 setConsoleView(runningBlenderProcess);
 
-                runningBlenderProcess.attachToProcess(console);
+                runningBlenderProcess.setConsole(console);
+                console.attachToProcess(runningBlenderProcess.getProcess());
                 runningBlenderProcess.getProcess().startNotify();
             } catch (ExecutionException e) {
                 e.printStackTrace();
@@ -393,7 +394,8 @@ public class BlenderToolWindow {
                     try {
                         RunningBlenderProcess runningBlenderProcess = startBlenderProcess(true, () -> destroyDebugInstance(runContentDescriptor));
                         PythonDebugLanguageConsoleView console = ((PythonDebugLanguageConsoleView) runContentDescriptor.getExecutionConsole());
-                        runningBlenderProcess.attachToProcess(console);
+                        runningBlenderProcess.setConsole(console);
+                        console.attachToProcess(runningBlenderProcess.getProcess());
                         runningBlenderProcess.getProcess().startNotify();
                     } catch (ExecutionException e) {
                         e.printStackTrace();
