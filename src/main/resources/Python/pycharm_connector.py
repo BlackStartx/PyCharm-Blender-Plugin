@@ -178,6 +178,7 @@ def reload_add_on(module_name):
     try:
         bpy.ops.preferences.addon_disable(module=module_name)
     except Exception:
+        traceback.print_exc()
         return {'CANCELLED'}
 
     for name in list(sys.modules.keys()):
@@ -187,6 +188,7 @@ def reload_add_on(module_name):
     try:
         bpy.ops.preferences.addon_enable(module=module_name)
     except Exception:
+        traceback.print_exc()
         return {'CANCELLED'}
 
     for window in bpy.context.window_manager.windows:
