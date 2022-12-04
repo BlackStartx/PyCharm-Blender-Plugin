@@ -24,16 +24,16 @@ if "--" in sys.argv:
 main_thread_queue = queue.Queue()
 
 
-def run_in_main_thread(func, params):
-    main_thread_queue.put((func, params))
+def run_in_main_thread(lambda_f):
+    main_thread_queue.put(lambda_f)
 
 
 # noinspection PyBroadException
 def run_thread_queue():
     while not main_thread_queue.empty():
-        (func, data) = main_thread_queue.get()
+        lambda_f = main_thread_queue.get()
         try:
-            func(data)
+            lambda_f()
         except Exception:
             traceback.print_exc()
     return 0.1
@@ -91,7 +91,7 @@ def send_json_string(client, string):
 
 def my_print(text):
     if print_on:
-        run_in_main_thread(print, text)
+        run_in_main_thread(lambda: print(text))
 
 
 # noinspection PyUnresolvedReferences,PyBroadException
@@ -128,7 +128,7 @@ def on_data(client: socket, data: bytes):
         }))
     if request_id == request_plugin_refresh:
         my_print("[My Socket] ---- Data: Refresh ----")
-        run_in_main_thread(reload_addons, json_data[request_plugin_refresh_name_list])
+        run_in_main_thread(lambda: reload_addons(json_data[request_plugin_refresh_name_list]))
 
 
 def sym_link(src, dst):
