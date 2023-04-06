@@ -1,12 +1,12 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '1.10.0'
+    id 'org.jetbrains.intellij' version '1.13.3'
 }
 
 group 'org.blackstartx'
-version '2022.3'
+version '2023.1'
 
-sourceCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
@@ -20,7 +20,7 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     plugins = ["python"]
-    version = "PY-2022.3"
+    version = "PY-2023.1"
     type = 'PY'
 }
 patchPluginXml {

@@ -2,7 +2,7 @@
     <id>org.blackstartx.blend-charm</id>
     <name>Blend-Charm</name>
     <vendor email="xthewhitel@gmail.com">BlackStartx</vendor>
-    <version>2022.3</version>
+    <version>2023.1</version>
 
     <description><![CDATA[
     A PyCharm Plugin that simplify the development of Blender Add-On inside the PyCharm IDE.

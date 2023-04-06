@@ -1,5 +1,6 @@
 package ui.dialogs.add_blender_instance;
 
+import com.intellij.icons.AllIcons;
 import data.BlenderExeFileChooserDescriptor;
 import data.BlenderInstance;
 import util.MySwingUtil;
@@ -20,7 +21,12 @@ public class AddBlenderInstance extends JDialog {
 
     AddBlenderInstance(@NotNull Project project) {
         setContentPane(contentPane);
+        initIcons();
         MySwingUtil.setLabelOnClickListener(explore, () -> onExploreClick(project));
+    }
+
+    private void initIcons() {
+        this.explore.setIcon(AllIcons.Nodes.Folder);
     }
 
     private void onExploreClick(@NotNull Project project) {

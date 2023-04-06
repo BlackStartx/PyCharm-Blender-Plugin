@@ -3,6 +3,7 @@ package ui.tool_window;
 import com.intellij.execution.*;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.icons.AllIcons;
 import data.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -76,6 +77,7 @@ public class BlenderToolWindow {
     BlenderToolWindow(@NotNull Project project) {
         this.project = new MyProjectHolder(project);
         this.blenderSettings = BlenderSettings.getBlenderSettings(this.project);
+        initIcons();
         init();
 
         for (BlenderInstance savedBlenderInstance : blenderSettings.getBlenderInstances())
@@ -97,12 +99,11 @@ public class BlenderToolWindow {
         runningInstances.addListSelectionListener(e -> setConsoleView(getSelectedRunningProcess()));
     }
 
-    private RunningBlenderProcess getSelectedRunningProcess() {
-        return runningInstances.getSelectedIndex() == -1 ? null : runningInstancesAdapter.get(runningInstances.getSelectedIndex());
-    }
-
-    private boolean isSelectedInstanceValid() {
-        return blenderInstances.getModel().getSize() != 0;
+    private void initIcons() {
+        start.setIcon(AllIcons.Actions.Execute);
+        button_add.setIcon(AllIcons.General.Add);
+        debug.setIcon(AllIcons.Actions.StartDebugger);
+        button_remove.setIcon(AllIcons.General.Remove);
     }
 
     private void init() {
@@ -113,6 +114,14 @@ public class BlenderToolWindow {
                 for (VFileEvent event : events) if (event.isFromSave()) onSave(event.getFile());
             }
         });
+    }
+
+    private RunningBlenderProcess getSelectedRunningProcess() {
+        return runningInstances.getSelectedIndex() == -1 ? null : runningInstancesAdapter.get(runningInstances.getSelectedIndex());
+    }
+
+    private boolean isSelectedInstanceValid() {
+        return blenderInstances.getModel().getSize() != 0;
     }
 
     private void onSave(VirtualFile virtualFile) {
@@ -224,7 +233,8 @@ public class BlenderToolWindow {
                     if (runningBlenderProcess.isDebug()) intentionalDebugRestart(runningBlenderProcess);
                 }
             }
-            case CommunicationData.RESPONSE_PLUGIN_REFRESH -> root.getString(CommunicationData.RESPONSE_PLUGIN_REFRESH_STATUS);
+            case CommunicationData.RESPONSE_PLUGIN_REFRESH ->
+                    root.getString(CommunicationData.RESPONSE_PLUGIN_REFRESH_STATUS);
         }
     }
 
@@ -385,7 +395,7 @@ public class BlenderToolWindow {
                 configuration.setSuspendAfterConnect(false);
 
                 configuration.setMappingSettings(new PathMappingSettings() {{
-                    add(new PathMapping(project.addonContainerPath(), getSelectedBlenderInstance().addonPath));
+                    add(new PathMapping(project.addonContainerPath().toLowerCase(), getSelectedBlenderInstance().addonPath.toLowerCase()));
                 }});
 
                 Executor debugExecutorInstance = DefaultDebugExecutor.getDebugExecutorInstance();

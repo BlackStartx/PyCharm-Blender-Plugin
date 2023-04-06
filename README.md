@@ -138,17 +138,25 @@ so, sadly, that feature can't work on Community Edition.
 
 # Knew Issues
 
-### Debug shows an external file instead of the local one.
+### ~~Debug shows an external file instead of the local one.~~
 
-Sadly this issue has been reported on YouTrack multiple times, I think we 
-shall wait a fix from IntelliJ Team.
+> This *should* have been fixed from 2023.1 onwards but it's using a "workaround".
+> 
+~~Sadly this issue has been reported on YouTrack multiple times, I think we 
+shall wait a fix from IntelliJ Team.~~
 
-- https://youtrack.jetbrains.com/issue/PY-34001
-- https://youtrack.jetbrains.com/issue/PY-18491
+- ~~https://youtrack.jetbrains.com/issue/PY-34001~~
+- ~~https://youtrack.jetbrains.com/issue/PY-18491~~
+
+### Run configuration console not printing.
+
+By running Blender normally trough the plugin, the console is a little shy to print output buffers.
+
+###### This issue is not present in Debug mode.
 
 ### Debug configuration crash.
 
-If you are running in debug mode, and an exception is thrown by the code, 
+If you are running in debug mode, and an exception is thrown by the code,
 Blender will crash.
 
 # Credits

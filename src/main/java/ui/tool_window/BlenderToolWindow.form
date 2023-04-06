@@ -21,7 +21,6 @@
               <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <icon value="general/add.png"/>
               <text value=""/>
             </properties>
           </component>
@@ -44,7 +43,6 @@
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <icon value="general/remove.png"/>
               <text value=""/>
             </properties>
           </component>
@@ -54,7 +52,6 @@
             </constraints>
             <properties>
               <enabled value="true"/>
-              <icon value="actions/execute.png"/>
               <text value=""/>
             </properties>
           </component>
@@ -63,7 +60,6 @@
               <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <icon value="actions/startDebugger.png"/>
               <text value=""/>
             </properties>
           </component>
