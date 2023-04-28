@@ -20,6 +20,10 @@ public class BlenderInstance {
         this.name = name;
     }
 
+    public String getAddonPath() {
+        return addonPath == null ? null : addonPath.toLowerCase();
+    }
+
     @Override
     public String toString() {
         return name;

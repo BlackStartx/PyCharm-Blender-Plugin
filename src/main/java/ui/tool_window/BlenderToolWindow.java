@@ -395,7 +395,7 @@ public class BlenderToolWindow {
                 configuration.setSuspendAfterConnect(false);
 
                 configuration.setMappingSettings(new PathMappingSettings() {{
-                    add(new PathMapping(project.addonContainerPath().toLowerCase(), getSelectedBlenderInstance().addonPath.toLowerCase()));
+                    add(new PathMapping(project.addonContainerPath().toLowerCase(), getSelectedBlenderInstance().getAddonPath()));
                 }});
 
                 Executor debugExecutorInstance = DefaultDebugExecutor.getDebugExecutorInstance();
