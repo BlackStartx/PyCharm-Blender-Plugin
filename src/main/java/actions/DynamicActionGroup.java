@@ -23,11 +23,11 @@ public class DynamicActionGroup extends ActionGroup {
         boolean addon = true;
         boolean subRoot = true;
 
-        for(VirtualFile file : virtualFiles){
+        for (VirtualFile file : virtualFiles) {
             VirtualBlenderFile blenderFile = new VirtualBlenderFile(project, file);
-            if(!blenderFile.isRoot) root = false;
-            if(!blenderFile.isSubRoot) subRoot = false;
-            if(!blenderFile.isBlenderAddon()) addon = false;
+            if (!blenderFile.isRoot) root = false;
+            if (!blenderFile.isSubRoot) subRoot = false;
+            if (!blenderFile.isBlenderAddon()) addon = false;
         }
 
         ArrayList<AnAction> actions = new ArrayList<>();
@@ -36,8 +36,8 @@ public class DynamicActionGroup extends ActionGroup {
             actions.add(new CreateNewBlenderPanelAction(project, virtualBlenderFile));
             actions.add(new CreateNewBlenderOperatorAction(project, virtualBlenderFile));
             actions.add(new Separator());
-            if(subRoot) actions.add(new UnmarkAsAddonAction(project));
-            if(root) actions.add(new UnmarkAsAddonProjectAction(project));
+            if (subRoot) actions.add(new UnmarkAsAddonAction(project));
+            if (root) actions.add(new UnmarkAsAddonProjectAction(project));
         } else {
             actions.add(new CreateNewBlenderAddonAction(project));
             if (subRoot && !project.settings().isBlenderProject()) {

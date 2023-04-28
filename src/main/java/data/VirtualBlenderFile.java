@@ -84,10 +84,8 @@ public class VirtualBlenderFile {
     }
 
     public boolean isSource() {
-        for (VirtualFile f : ProjectRootManager.getInstance(project.getProject()).getContentSourceRoots()) {
-            if (f.equals(selectedVirtualFile))
-                return true;
-        }
+        for (VirtualFile f : ProjectRootManager.getInstance(project.getProject()).getContentSourceRoots())
+            if (f.equals(selectedVirtualFile)) return true;
         return false;
     }
 }

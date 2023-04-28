@@ -37,7 +37,7 @@ public class CreateNewBlenderAddonAction extends AnAction {
             if (projectPath == null) return;
 
             try {
-                if(!dialog.form.isNameValid()) return;
+                if (!dialog.form.isNameValid()) return;
 
                 String directoryPath = Paths.appended(projectPath, dialog.form.getBlenderAddonFolderName());
                 VirtualFile directory = VfsUtil.createDirectories(directoryPath);

@@ -31,8 +31,7 @@ public class NewBlenderPopupWrapper extends DialogWrapper {
     }
 
     @Override
-    protected @Nullable
-    JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         form = new NewBlenderPopup(text, subText);
         return form.getJComponent();
     }

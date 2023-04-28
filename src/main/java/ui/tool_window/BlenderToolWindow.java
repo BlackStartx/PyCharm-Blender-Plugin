@@ -233,8 +233,7 @@ public class BlenderToolWindow {
                     if (runningBlenderProcess.isDebug()) intentionalDebugRestart(runningBlenderProcess);
                 }
             }
-            case CommunicationData.RESPONSE_PLUGIN_REFRESH ->
-                    root.getString(CommunicationData.RESPONSE_PLUGIN_REFRESH_STATUS);
+            case CommunicationData.RESPONSE_PLUGIN_REFRESH -> root.getString(CommunicationData.RESPONSE_PLUGIN_REFRESH_STATUS);
         }
     }
 

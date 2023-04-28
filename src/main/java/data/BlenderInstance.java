@@ -12,7 +12,6 @@ public class BlenderInstance {
 
     @SuppressWarnings("unused")
     public BlenderInstance() {
-
     }
 
     public BlenderInstance(String path, String name) {
