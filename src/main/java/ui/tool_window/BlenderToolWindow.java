@@ -71,6 +71,7 @@ public class BlenderToolWindow {
     private JList<RunningBlenderProcess> runningInstances;
     private JPanel consolePanel;
     private JPanel nullPanel;
+    private JLabel button_settings;
 
     private static DefaultListModel<RunningBlenderProcess> runningInstancesAdapter;
 
@@ -86,6 +87,7 @@ public class BlenderToolWindow {
         blenderInstances.addItemListener(this::onBlenderInstanceChange);
         MySwingUtil.setLabelOnClickListener(button_add, this::onAddClick);
         MySwingUtil.setLabelOnClickListener(button_remove, this::onRemoveClick);
+        MySwingUtil.setLabelOnClickListener(button_settings, this::onSettingsClick);
 
         MySwingUtil.setLabelOnClickListener(start, this::onStartClick);
         MySwingUtil.setLabelOnClickListener(debug, this::onDebugClick);
@@ -100,6 +102,7 @@ public class BlenderToolWindow {
     }
 
     private void initIcons() {
+        button_settings.setIcon(AllIcons.General.Gear);
         start.setIcon(AllIcons.Actions.Execute);
         button_add.setIcon(AllIcons.General.Add);
         debug.setIcon(AllIcons.Actions.StartDebugger);
@@ -158,6 +161,7 @@ public class BlenderToolWindow {
         debug.setEnabled(isSelectedInstanceValid() && !PluginSettings.isCommunity);
 
         button_remove.setEnabled(getSelectedBlenderInstance() != null);
+        button_settings.setEnabled(getSelectedBlenderInstance() != null);
     }
 
     private void addConfiguration(BlenderInstance configuration) {
@@ -326,8 +330,8 @@ public class BlenderToolWindow {
      */
 
     private void onAddClick() {
-        AddBlenderInstanceWrapper dialog = new AddBlenderInstanceWrapper(project.getProject());
-        if (dialog.showAndGet()) addConfiguration(dialog.form.getConfiguration());
+        AddBlenderInstanceWrapper dialog = new AddBlenderInstanceWrapper(project.getProject(), null);
+        if (dialog.showAndGet()) addConfiguration(dialog.form.getNewConfiguration());
     }
 
     private void onRemoveClick() {
@@ -339,6 +343,14 @@ public class BlenderToolWindow {
             blenderInstances.removeItem(getSelectedBlenderInstance());
             updateButtons();
         }
+    }
+
+    private void onSettingsClick() {
+        BlenderInstance blenderInstance = getSelectedBlenderInstance();
+        if (blenderInstance == null) return;
+
+        AddBlenderInstanceWrapper dialog = new AddBlenderInstanceWrapper(project.getProject(), blenderInstance);
+        if (dialog.showAndGet()) dialog.form.updateConfiguration(blenderInstance);
     }
 
     private void setConsoleView(RunningBlenderProcess runningBlenderProcess) {

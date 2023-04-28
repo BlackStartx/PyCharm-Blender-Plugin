@@ -19,10 +19,13 @@ public class AddBlenderInstance extends JDialog {
     private JTextField name;
     private JLabel explore;
 
-    AddBlenderInstance(@NotNull Project project) {
+    AddBlenderInstance(@NotNull Project project, BlenderInstance from) {
         setContentPane(contentPane);
         initIcons();
         MySwingUtil.setLabelOnClickListener(explore, () -> onExploreClick(project));
+        if (from == null) return;
+        name.setText(from.name);
+        path.setText(from.path);
     }
 
     private void initIcons() {
@@ -43,7 +46,12 @@ public class AddBlenderInstance extends JDialog {
         return contentPane;
     }
 
-    public BlenderInstance getConfiguration() {
+    public BlenderInstance getNewConfiguration() {
         return new BlenderInstance(path.getText(), name.getText());
+    }
+
+    public void updateConfiguration(BlenderInstance update) {
+        update.path = path.getText();
+        update.name = name.getText();
     }
 }
