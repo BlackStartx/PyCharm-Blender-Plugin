@@ -11,7 +11,6 @@ import org.json.JSONTokener;
 import settings.BlenderSettings;
 import ui.dialogs.blender_popup.NewBlenderPopupWrapper;
 import util.core.MyFileUtils;
-import util.core.MyIterator;
 import util.core.socket.server.MyServerSocket;
 import util.core.socket.MySocketConnection;
 import util.MyInputStreamHelper;
@@ -131,10 +130,10 @@ public class BlenderToolWindow {
         for (int i = 0; i < runningInstancesAdapter.size(); i++)
             intellijConsoleInfoPrintLn(runningInstancesAdapter.get(i).getConsole(), "[On Save: VFS_CHANGE]");
         String ofAddon = new VirtualBlenderFile(project, virtualFile).getRelativeAddonName();
-        if (ofAddon != null) reloadAddons(new MyIterator<>(new String[]{ofAddon}));
+        if (ofAddon != null) reloadAddons(new String[]{ofAddon});
     }
 
-    private void reloadAddons(MyIterator<String> strings) {
+    private void reloadAddons(String[] strings) {
         for (int i = 0; i < runningInstancesAdapter.size(); i++) {
             RunningBlenderProcess instance = runningInstancesAdapter.get(i);
             MySocketConnection socket = instance.getSocket();

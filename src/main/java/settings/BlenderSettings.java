@@ -2,11 +2,11 @@ package settings;
 
 import data.BlenderInstance;
 import util.MyProjectHolder;
-import util.core.MyIterator;
 import com.intellij.openapi.project.Project;
 import services.BlendCharmPersistentData;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class BlenderSettings {
 
@@ -70,7 +70,9 @@ public class BlenderSettings {
     public void removeDeletedAddon(MyProjectHolder project) {
         if (data.blenderAddOnNames == null || project.projectVirtualFile == null || isBlenderProject()) return;
 
-        data.blenderAddOnNames = new MyIterator<>(data.blenderAddOnNames).where(element -> project.projectVirtualFile.findChild(element) != null).toArrayList();
+        data.blenderAddOnNames = data.blenderAddOnNames.stream()
+                .filter(element -> project.projectVirtualFile.findChild(element) != null)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<String> getBlenderAddons() {
