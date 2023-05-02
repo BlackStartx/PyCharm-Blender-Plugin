@@ -319,6 +319,7 @@ public class BlenderToolWindow {
         }
 
         GeneralCommandLine generalCommandLine = new GeneralCommandLine(command);
+        generalCommandLine.withEnvironment(instance.environment);
         generalCommandLine.setCharset(StandardCharsets.UTF_8);
         generalCommandLine.setWorkDirectory(project.getBasePath());
         return new OSProcessHandler(generalCommandLine);

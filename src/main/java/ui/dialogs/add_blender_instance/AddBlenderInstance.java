@@ -11,6 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.HashMap;
 
 public class AddBlenderInstance extends JDialog {
 
@@ -47,7 +48,7 @@ public class AddBlenderInstance extends JDialog {
     }
 
     public BlenderInstance getNewConfiguration() {
-        return new BlenderInstance(path.getText(), name.getText());
+        return new BlenderInstance(path.getText(), name.getText(), new HashMap<>());
     }
 
     public void updateConfiguration(BlenderInstance update) {
