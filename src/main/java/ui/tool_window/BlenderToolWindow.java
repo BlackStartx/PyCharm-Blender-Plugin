@@ -5,6 +5,7 @@ import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.icons.AllIcons;
 import data.*;
+import icons.BlendCharmIcons;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -71,6 +72,7 @@ public class BlenderToolWindow {
     private JPanel consolePanel;
     private JPanel nullPanel;
     private JLabel button_settings;
+    private JLabel blenderLogo;
 
     private static DefaultListModel<RunningBlenderProcess> runningInstancesAdapter;
 
@@ -106,6 +108,7 @@ public class BlenderToolWindow {
         button_add.setIcon(AllIcons.General.Add);
         debug.setIcon(AllIcons.Actions.StartDebugger);
         button_remove.setIcon(AllIcons.General.Remove);
+        blenderLogo.setIcon(BlendCharmIcons.BLENDER_LOGO_BIG);
     }
 
     private void init() {
