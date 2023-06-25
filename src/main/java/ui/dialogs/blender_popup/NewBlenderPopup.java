@@ -1,12 +1,14 @@
 package ui.dialogs.blender_popup;
 
+import com.intellij.ui.components.JBLabel;
+
 import javax.swing.*;
 
 public class NewBlenderPopup extends JDialog {
 
     private JPanel contentPane;
-    private JLabel text;
-    private JLabel subText;
+    private JBLabel text;
+    private JBLabel subText;
 
     public NewBlenderPopup(String text, String subText) {
         setContentPane(contentPane);

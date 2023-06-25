@@ -1,6 +1,8 @@
 package util;
 
-import javax.swing.*;
+import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.JBTextField;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.event.MouseAdapter;
@@ -8,7 +10,7 @@ import java.awt.event.MouseEvent;
 
 public class MySwingUtil {
 
-    public static void setLabelOnClickListener(JLabel to, Runnable method) {
+    public static void setLabelOnClickListener(JBLabel to, Runnable method) {
         to.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -17,7 +19,7 @@ public class MySwingUtil {
         });
     }
 
-    public static void setFieldTextChangeListener(JTextField addon_name, Runnable onNameChange) {
+    public static void setFieldTextChangeListener(JBTextField addon_name, Runnable onNameChange) {
         addon_name.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 onNameChange.run();

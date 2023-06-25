@@ -2,6 +2,7 @@ package ui.dialogs.new_blender_panel;
 
 import com.google.common.base.CaseFormat;
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.components.JBTextField;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -9,8 +10,8 @@ import javax.swing.*;
 public class NewBlenderPanel extends JDialog {
 
     private JPanel contentPane;
-    private JTextField label;
-    private JTextField category;
+    private JBTextField label;
+    private JBTextField category;
     private JComboBox<String> regions;
     private JComboBox<String> spaces;
 

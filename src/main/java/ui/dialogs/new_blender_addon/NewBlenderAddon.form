@@ -8,7 +8,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <component id="8d94e" class="javax.swing.JTextField" binding="addon_name">
+      <component id="8d94e" class="com.intellij.ui.components.JBTextField" binding="addon_name">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -21,7 +21,7 @@
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
       </vspacer>
-      <component id="802a8" class="javax.swing.JLabel">
+      <component id="802a8" class="com.intellij.ui.components.JBLabel">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -29,7 +29,7 @@
           <text value="Name:"/>
         </properties>
       </component>
-      <component id="3979" class="javax.swing.JTextField" binding="addon_author">
+      <component id="3979" class="com.intellij.ui.components.JBTextField" binding="addon_author">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -37,7 +37,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="508b8" class="javax.swing.JLabel">
+      <component id="508b8" class="com.intellij.ui.components.JBLabel">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -45,7 +45,7 @@
           <text value="Author:"/>
         </properties>
       </component>
-      <component id="57af5" class="javax.swing.JLabel">
+      <component id="57af5" class="com.intellij.ui.components.JBLabel">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -53,7 +53,7 @@
           <text value="Description:"/>
         </properties>
       </component>
-      <component id="d1104" class="javax.swing.JTextField" binding="addon_description">
+      <component id="d1104" class="com.intellij.ui.components.JBTextField" binding="addon_description">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>

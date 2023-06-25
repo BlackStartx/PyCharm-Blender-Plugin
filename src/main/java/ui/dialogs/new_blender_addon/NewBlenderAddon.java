@@ -1,5 +1,6 @@
 package ui.dialogs.new_blender_addon;
 
+import com.intellij.ui.components.JBTextField;
 import util.MySwingUtil;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -13,9 +14,9 @@ public class NewBlenderAddon extends JDialog {
     private final Action okAction;
 
     private JPanel contentPane;
-    private JTextField addon_name;
-    private JTextField addon_author;
-    private JTextField addon_description;
+    private JBTextField addon_name;
+    private JBTextField addon_author;
+    private JBTextField addon_description;
 
     public NewBlenderAddon(@NotNull Project project, @NotNull Action okAction) {
         this.okAction = okAction;

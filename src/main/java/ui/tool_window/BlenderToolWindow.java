@@ -4,6 +4,8 @@ import com.intellij.execution.*;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.icons.AllIcons;
+import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.JBList;
 import data.*;
 import icons.BlendCharmIcons;
 import org.json.JSONArray;
@@ -64,15 +66,15 @@ public class BlenderToolWindow {
     private JPanel myToolWindowContent;
     private JComboBox<BlenderInstance> blenderInstances;
 
-    private JLabel button_add;
-    private JLabel button_remove;
-    private JLabel start;
-    private JLabel debug;
-    private JList<RunningBlenderProcess> runningInstances;
+    private JBLabel button_add;
+    private JBLabel button_remove;
+    private JBLabel start;
+    private JBLabel debug;
+    private JBList<RunningBlenderProcess> runningInstances;
     private JPanel consolePanel;
     private JPanel nullPanel;
-    private JLabel button_settings;
-    private JLabel blenderLogo;
+    private JBLabel button_settings;
+    private JBLabel blenderLogo;
 
     private static DefaultListModel<RunningBlenderProcess> runningInstancesAdapter;
 

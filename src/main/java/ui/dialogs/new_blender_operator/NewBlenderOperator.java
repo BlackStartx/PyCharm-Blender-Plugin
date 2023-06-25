@@ -2,6 +2,7 @@ package ui.dialogs.new_blender_operator;
 
 import com.google.common.base.CaseFormat;
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.components.JBTextField;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -9,8 +10,8 @@ import javax.swing.*;
 public class NewBlenderOperator extends JDialog {
 
     private JPanel contentPane;
-    private JTextField label;
-    private JTextField idName;
+    private JBTextField label;
+    private JBTextField idName;
 
     public NewBlenderOperator(@NotNull Project project) {
         setContentPane(contentPane);
