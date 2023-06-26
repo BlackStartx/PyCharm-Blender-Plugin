@@ -11,6 +11,8 @@ import util.MyInputStreamHelper;
 import util.MyProjectHolder;
 import util.core.MyFileUtils;
 
+import java.nio.file.Path;
+
 public class CreateNewBlenderPanelAction extends AnAction {
 
     private final MyProjectHolder project;
@@ -36,8 +38,8 @@ public class CreateNewBlenderPanelAction extends AnAction {
             stream = stream.replace("$SPACE_TYPE$", dialog.form.getSpaceType());
             stream = stream.replace("$REGION_TYPE$", dialog.form.getRegionType());
 
-            if (!MyFileUtils.createDirIfNotExist(panelsPath)) return;
-            MyFileUtils.writeText(Paths.appended(panelsPath, dialog.form.getPanelFileName()), stream);
+            if (MyFileUtils.cantCreateDirectory(panelsPath)) return;
+            MyFileUtils.write(Path.of(Paths.appended(panelsPath, dialog.form.getPanelFileName())), stream);
             LocalFileSystemImpl.getInstance().refresh(true);
         }
     }

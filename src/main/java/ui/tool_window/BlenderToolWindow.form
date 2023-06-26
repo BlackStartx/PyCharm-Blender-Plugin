@@ -21,7 +21,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Blender Instances:"/>
+              <text resource-bundle="locale/BlendCharm" key="blenderToolWindow.blenderInstances"/>
             </properties>
           </component>
           <component id="80e93" class="javax.swing.JComboBox" binding="blenderInstances">
@@ -117,7 +117,7 @@
                     </constraints>
                     <properties>
                       <horizontalTextPosition value="0"/>
-                      <text value="No Blender Instance Running..."/>
+                      <text resource-bundle="locale/BlendCharm" key="blenderToolWindow.noBlenderInstanceRunning"/>
                       <verticalTextPosition value="3"/>
                     </properties>
                   </component>

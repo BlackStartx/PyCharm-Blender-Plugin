@@ -1,27 +1,6 @@
 package ui.tool_window;
 
 import com.intellij.execution.*;
-import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.icons.AllIcons;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.JBList;
-import data.*;
-import icons.BlendCharmIcons;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-import settings.BlenderSettings;
-import ui.dialogs.blender_popup.NewBlenderPopupWrapper;
-import util.core.MyFileUtils;
-import util.core.socket.server.MyServerSocket;
-import util.core.socket.MySocketConnection;
-import util.MyInputStreamHelper;
-import util.MyProjectHolder;
-import util.MySwingUtil;
-import plugin_settings.PluginSettings;
-import ui.dialogs.add_blender_instance.AddBlenderInstanceWrapper;
-import ui.dialogs.remove_blender_instance.RemoveBlenderInstanceWrapper;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
@@ -29,24 +8,46 @@ import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder;
 import com.intellij.execution.ui.ConsoleView;
+import com.intellij.execution.ui.ConsoleViewContentType;
+import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.JBList;
 import com.intellij.util.PathMappingSettings;
 import com.intellij.util.messages.MessageBusConnection;
 import com.jetbrains.python.console.PythonDebugLanguageConsoleView;
 import com.jetbrains.python.debugger.remote.PyRemoteDebugConfiguration;
 import com.jetbrains.python.debugger.remote.PyRemoteDebugConfigurationFactory;
 import com.jetbrains.python.debugger.remote.PyRemoteDebugConfigurationType;
+import data.*;
+import icons.BlendCharmIcons;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import plugin_settings.PluginSettings;
+import settings.BlenderSettings;
+import ui.dialogs.add_blender_instance.AddBlenderInstanceWrapper;
+import ui.dialogs.debug_popup.DebugPopupWrapper;
+import ui.dialogs.remove_blender_instance.RemoveBlenderInstanceWrapper;
+import util.MyInputStreamHelper;
+import util.MyProjectHolder;
+import util.MySwingUtil;
+import util.core.MyFileUtils;
+import util.core.socket.MySocketConnection;
+import util.core.socket.server.MyServerSocket;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.io.*;
+import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,14 +59,12 @@ public class BlenderToolWindow {
     private static final File egg = BlenderToolWindowUtils.getEggFile();
     private static final int debugPort = 8132;
     private static final int socketPort = 8525;
-
+    private static DefaultListModel<RunningBlenderProcess> runningInstancesAdapter;
     private final BlenderSettings blenderSettings;
     private final MyProjectHolder project;
     private final MyServerSocket currentSocket = new MyServerSocket("localhost", socketPort);
-
     private JPanel myToolWindowContent;
     private JComboBox<BlenderInstance> blenderInstances;
-
     private JBLabel button_add;
     private JBLabel button_remove;
     private JBLabel start;
@@ -75,8 +74,6 @@ public class BlenderToolWindow {
     private JPanel nullPanel;
     private JBLabel button_settings;
     private JBLabel blenderLogo;
-
-    private static DefaultListModel<RunningBlenderProcess> runningInstancesAdapter;
 
     BlenderToolWindow(@NotNull Project project) {
         this.project = new MyProjectHolder(project);
@@ -194,26 +191,13 @@ public class BlenderToolWindow {
         String realContent = MyInputStreamHelper.readString(resourceAsStream);
 
         if (runningFile.exists()) {
-            if (realContent.equals(MyFileUtils.readText(runningFile.getPath()))) return true;
+            if (realContent.equals(MyFileUtils.readString(runningFile.toPath()))) return true;
             if (!runningFile.delete()) return false;
         }
         File dirs = runningFile.getParentFile();
 
-        if (dirs.exists() || dirs.mkdirs()) {
-            try {
-                if (runningFile.createNewFile()) {
-                    try (OutputStream outStream = new FileOutputStream(runningFile)) {
-                        outStream.write(realContent.getBytes());
-                        return true;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
+        if (dirs.exists() || dirs.mkdirs()) MyFileUtils.write(runningFile.toPath(), realContent);
+        return runningFile.exists();
     }
 
     /*
@@ -251,9 +235,7 @@ public class BlenderToolWindow {
     }
 
     private void onNewDebugInformationPopup() {
-        NewBlenderPopupWrapper.show("New Debug Information",
-                "The debug session has been terminated due to newer information.",
-                "This is totally normal on first executions, please restart the debug mode.");
+        new DebugPopupWrapper().show();
     }
 
     private void onInstanceConnectionEnd(RunningBlenderProcess runningBlenderProcess) {

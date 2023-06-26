@@ -11,6 +11,8 @@ import util.MyInputStreamHelper;
 import util.MyProjectHolder;
 import util.core.MyFileUtils;
 
+import java.nio.file.Path;
+
 public class CreateNewBlenderOperatorAction extends AnAction {
 
     private final MyProjectHolder project;
@@ -33,8 +35,8 @@ public class CreateNewBlenderOperatorAction extends AnAction {
             stream = stream.replace("$ID_NAME$", dialog.form.getIdName());
             stream = stream.replace("$LABEL$", dialog.form.getLabel());
 
-            if (!MyFileUtils.createDirIfNotExist(panelsPath)) return;
-            MyFileUtils.writeText(Paths.appended(panelsPath, dialog.form.getOperatorFileName()), stream);
+            if (MyFileUtils.cantCreateDirectory(panelsPath)) return;
+            MyFileUtils.write(Path.of(Paths.appended(panelsPath, dialog.form.getOperatorFileName())), stream);
             LocalFileSystemImpl.getInstance().refresh(true);
         }
     }

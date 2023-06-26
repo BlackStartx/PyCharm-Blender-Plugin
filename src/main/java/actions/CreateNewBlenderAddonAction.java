@@ -1,11 +1,5 @@
 package actions;
 
-import data.VirtualBlenderFile;
-import util.core.MyFileUtils;
-import util.MyInputStreamHelper;
-import util.MyProjectHolder;
-import ui.dialogs.new_blender_addon.NewBlenderAddonWrapper;
-import icons.BlendCharmIcons;
 import com.intellij.history.core.Paths;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -16,9 +10,16 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl;
+import data.VirtualBlenderFile;
+import icons.BlendCharmIcons;
 import org.jetbrains.annotations.NotNull;
+import ui.dialogs.new_blender_addon.NewBlenderAddonWrapper;
+import util.MyInputStreamHelper;
+import util.MyProjectHolder;
+import util.core.MyFileUtils;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class CreateNewBlenderAddonAction extends AnAction {
 
@@ -56,7 +57,7 @@ public class CreateNewBlenderAddonAction extends AnAction {
                 stream = stream.replace("$ADDON_AUTHOR$", dialog.form.getBlenderAddonAuthor());
                 stream = stream.replace("$ADDON_DESCRIPTION$", dialog.form.getBlenderAddonDescription());
 
-                MyFileUtils.writeText(Paths.appended(directoryPath, "__init__.py"), stream);
+                MyFileUtils.write(Path.of(Paths.appended(directoryPath, "__init__.py")), stream);
                 LocalFileSystemImpl.getInstance().refresh(true);
             } catch (IOException e) {
                 e.printStackTrace();

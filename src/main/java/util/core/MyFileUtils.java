@@ -1,44 +1,32 @@
 package util.core;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Just some file function... the original class is way more complete...
  */
 public class MyFileUtils {
 
-    public static boolean createDirIfNotExist(String path) {
+    public static boolean cantCreateDirectory(String path) {
         File file = new File(path);
-        return !file.exists() ? file.mkdirs() : file.isDirectory();
+        return file.exists() ? !file.isDirectory() : !file.mkdirs();
     }
 
-    public static String readText(String path) {
+    public static String readString(Path path) {
         try {
-            StringBuilder text = new StringBuilder();
-            BufferedReader br = new BufferedReader(new FileReader(path));
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-                text.append('\n');
-            }
-            br.close();
-            return text.toString();
+            return Files.readString(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static void writeText(String path, String text) {
-        writeLines(path, new String[]{text});
-    }
-
-    public static void writeLines(String path, String[] lines) {
+    public static void write(Path path, String text) {
         try {
-            Writer outWriter = new BufferedWriter(new FileWriter(path), 1024);
-            for (String line : lines) outWriter.write(line + "\n");
-            outWriter.close();
+            Files.write(path, text.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
