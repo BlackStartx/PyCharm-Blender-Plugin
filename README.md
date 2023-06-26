@@ -140,7 +140,7 @@ so, sadly, that feature can't work on Community Edition.
 
 ### ~~Debug shows an external file instead of the local one.~~
 
-> This *should* have been fixed from 2023.1 onwards but it's using a "workaround".
+> This *should* have been fixed from 2023.1 onwards, but it's using a "workaround".
 > 
 ~~Sadly this issue has been reported on YouTrack multiple times, I think we 
 shall wait a fix from IntelliJ Team.~~
@@ -150,7 +150,7 @@ shall wait a fix from IntelliJ Team.~~
 
 ### Run configuration console not printing.
 
-By running Blender normally trough the plugin, the console is a little shy to print output buffers.
+By running Blender normally through the plugin, the console is a little shy to print output buffers.
 
 ###### This issue is not present in Debug mode.
 

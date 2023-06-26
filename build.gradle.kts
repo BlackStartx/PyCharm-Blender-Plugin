@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("org.jetbrains.intellij") version "1.13.3"
+    id("org.jetbrains.intellij") version "1.14.1"
 }
 
 group = "org.blackstartx"
@@ -15,8 +15,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation(group = "junit", name = "junit", version = "4.13.1")
-    implementation(group = "org.json", name = "json", version = "20220924")
+    testImplementation(group = "junit", name = "junit", version = "4.13.2")
+    implementation(group = "org.json", name = "json", version = "20230227")
 }
 
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
