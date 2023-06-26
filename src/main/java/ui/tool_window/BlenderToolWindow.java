@@ -275,7 +275,7 @@ public class BlenderToolWindow {
     private RunningBlenderProcess startBlenderProcess(boolean debugMode, Runnable onEnd) throws ExecutionException {
         if (currentSocket.open()) {
             BlenderInstance instance = getSelectedBlenderInstance();
-            OSProcessHandler processHandler = createBlenderProcessHandler(instance, debugMode, blenderSettings.data.showVerbose);
+            OSProcessHandler processHandler = createBlenderProcessHandler(instance, debugMode, blenderSettings.data().showVerbose);
             RunningBlenderProcess runningBlenderProcess = new RunningBlenderProcess(instance, processHandler, debugMode);
 
             currentSocket.asyncWaitClient(new MySocketConnection.MySocketConnectionInterface() {
@@ -371,7 +371,7 @@ public class BlenderToolWindow {
     }
 
     private void intellijConsoleInfoPrintLn(ConsoleView console, String message) {
-        if (!blenderSettings.data.showVerbose) return;
+        if (!blenderSettings.data().showVerbose) return;
         console.print(message + "\n", ConsoleViewContentType.LOG_DEBUG_OUTPUT);
     }
 

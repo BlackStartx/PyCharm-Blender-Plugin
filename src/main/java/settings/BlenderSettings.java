@@ -8,7 +8,7 @@ import services.BlendCharmPersistentData;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class BlenderSettings {
+public record BlenderSettings(BlenderSettingsData data) {
 
     public static BlenderSettings getBlenderSettings(MyProjectHolder project) {
         return getBlenderSettings(project.getProject());
@@ -16,12 +16,6 @@ public class BlenderSettings {
 
     public static BlenderSettings getBlenderSettings(Project project) {
         return new BlenderSettings(BlendCharmPersistentData.getInstance(project).getState().getBlenderSettings());
-    }
-
-    public final BlenderSettingsData data;
-
-    public BlenderSettings(BlenderSettingsData data) {
-        this.data = data;
     }
 
     public boolean isBlenderProject() {

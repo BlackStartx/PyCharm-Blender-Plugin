@@ -16,7 +16,7 @@ public class Config implements Configurable {
     public Config(Project project) {
         this.project = project;
         this.settings = BlenderSettings.getBlenderSettings(project);
-        this.checkBox = new JBCheckBox("Enable verbose.", settings.data.showVerbose);
+        this.checkBox = new JBCheckBox("Enable verbose.", settings.data().showVerbose);
     }
 
     @Override
@@ -34,17 +34,17 @@ public class Config implements Configurable {
 
     @Override
     public boolean isModified() {
-        return settings.data.showVerbose != checkBox.isSelected();
+        return settings.data().showVerbose != checkBox.isSelected();
     }
 
     @Override
     public void reset() {
-        checkBox.setSelected(settings.data.showVerbose);
+        checkBox.setSelected(settings.data().showVerbose);
     }
 
     @Override
     public void apply() {
-        settings.data.showVerbose = checkBox.isSelected();
+        settings.data().showVerbose = checkBox.isSelected();
         project.save();
     }
 }
