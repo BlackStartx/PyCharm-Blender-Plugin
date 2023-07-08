@@ -22,14 +22,8 @@
         <projectService serviceImplementation="services.BlendCharmPersistentData"/>
         <consoleFilterProvider implementation="services.BlenderConsoleFilter" order="first"/>
         <projectConfigurable parentId="tools" instance="settings.Config" id="settings.Config" displayName="Blend-Charm"/>
-        <localInspection language="Python"
-                         displayName="Blender: Id names must be lowercase in order to be registered."
-                         groupPath="Blender"
-                         groupBundle="messages.InspectionsBundle"
-                         groupName="Exceptions"
-                         enabledByDefault="true"
-                         level="WARNING"
-                         implementationClass="services.inspections.BlIdLowercase"/>
+        <localInspection language="Python" displayName="Blender: The naming convention of Panel IDs is {UPPER_CASE}_PT_{mixed_case}." groupPath="Blender" groupBundle="messages.InspectionsBundle" groupName="Exceptions" enabledByDefault="true" level="WARNING" implementationClass="services.inspections.PanelWarnId"/>
+        <localInspection language="Python" displayName="Blender: Operator IDs names must be lowercase in order to be registered." groupPath="Blender" groupBundle="messages.InspectionsBundle" groupName="Exceptions" enabledByDefault="true" level="ERROR" implementationClass="services.inspections.OperatorErrId"/>
     </extensions>
 
     <actions>
