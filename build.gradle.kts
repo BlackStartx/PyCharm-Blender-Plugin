@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "org.blackstartx"
-version = "2023.1.1"
+version = "2023.2"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -22,7 +22,7 @@ dependencies {
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
     plugins.set(listOf("python"))
-    version.set("PY-2023.1")
+    version.set("PY-2023.2")
 }
 tasks {
     patchPluginXml {}
