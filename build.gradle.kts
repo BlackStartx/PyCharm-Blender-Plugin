@@ -7,7 +7,7 @@ group = "org.blackstartx"
 val code = "isCommunity = true"
 val path = "src\\main\\java\\plugin_settings\\PluginSettings.java"
 val type = if (File(path).readText().contains(code)) "Community" else "Professional"
-version = "2023.2"
+version = "2023.2.1"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
