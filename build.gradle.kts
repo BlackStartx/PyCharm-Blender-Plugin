@@ -4,6 +4,9 @@ plugins {
 }
 
 group = "org.blackstartx"
+val code = "isCommunity = true"
+val path = "src\\main\\java\\plugin_settings\\PluginSettings.java"
+val type = if (File(path).readText().contains(code)) "Community" else "Professional"
 version = "2023.2"
 
 java {
@@ -25,5 +28,8 @@ intellij {
     version.set("PY-2023.2")
 }
 tasks {
+    buildPlugin {
+        archiveFileName.set("${rootProject.name}.${version}.${type}.Edition.zip")
+    }
     patchPluginXml {}
 }
