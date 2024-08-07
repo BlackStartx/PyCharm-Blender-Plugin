@@ -14,14 +14,14 @@
                 A PyCharm Plugin that simplify the development of Blender Add-On inside the PyCharm IDE.
                 <br/>
                 <br/>
-                Available for boot Community or Professional editions of PyCharm.
+                Available for both Community or Professional editions of PyCharm.
             ]]>
         </description>
         <change-notes>
             <![CDATA[
                 ## Changelog
                 - **[Run Configuration]** Settings: You can now edit and change your Blender Run Configuration settings!
-                - **[Run Configuration]** Enviroment: You can now set indipendent enviroment variables between your configurations!
+                - **[Run Configuration]** Environment: You can now set independent environment variables between your configurations!
             ]]>
         </change-notes>
     </plugin>

@@ -8,7 +8,7 @@
     A PyCharm Plugin that simplify the development of Blender Add-On inside the PyCharm IDE.
     <br/>
     <br/>
-    Available for boot Community or Professional editions of PyCharm.
+    Available for both Community or Professional editions of PyCharm.
     ]]></description>
 
     <depends>com.intellij.modules.lang</depends>
