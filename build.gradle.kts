@@ -7,7 +7,7 @@ group = "org.blackstartx"
 val code = "isCommunity = true"
 val path = "src\\main\\java\\plugin_settings\\PluginSettings.java"
 val type = if (File(path).readText().contains(code)) "Community" else "Professional"
-version = "2024.1"
+version = "2024.2"
 
 repositories {
     mavenCentral()
@@ -21,7 +21,7 @@ dependencies {
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
     plugins.set(listOf("python"))
-    version.set("PY-2024.1")
+    version.set("PY-2024.2")
 }
 
 tasks {
