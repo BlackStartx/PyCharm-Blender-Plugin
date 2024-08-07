@@ -31,7 +31,7 @@ public class BlenderConsoleFilter implements ConsoleFilterProvider {
 
             int start = end - s.length();
             for (BlenderInstance instance : blenderSettings.getBlenderInstances()) {
-                if (instance.addonPath == null || instance.addonPath.equals("")) continue;
+                if (instance.addonPath == null || instance.addonPath.isEmpty()) continue;
                 int index = s.indexOf(instance.addonPath);
                 if (index != -1) {
                     String afterPathUnknown = s.substring(index + instance.addonPath.length());

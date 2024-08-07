@@ -296,7 +296,7 @@ public class BlenderToolWindow {
             command.add("print_on");
             command.add(".");
         }
-        if (debugMode && egg != null && egg.exists()) {
+        if (debugMode && egg.exists()) {
             command.add("debug_mode");
             command.add(".");
             command.add("debug_port");

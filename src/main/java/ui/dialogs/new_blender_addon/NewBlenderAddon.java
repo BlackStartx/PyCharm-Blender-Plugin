@@ -52,7 +52,7 @@ public class NewBlenderAddon extends JDialog {
     }
 
     public boolean isNameValid() {
-        if (addon_name.getText().length() == 0) return false;
+        if (addon_name.getText().isEmpty()) return false;
 
         try {
             Paths.get(addon_name.getText());

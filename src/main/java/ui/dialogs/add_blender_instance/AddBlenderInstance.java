@@ -111,7 +111,7 @@ public class AddBlenderInstance extends JDialog {
             if (columnIndex == 0) {
                 env.remove(key);
                 key = (String) value;
-                if (key.length() != 0) env.put(key, val);
+                if (!key.isEmpty()) env.put(key, val);
             } else env.put(key, (String) value);
 
             fireTableDataChanged();
