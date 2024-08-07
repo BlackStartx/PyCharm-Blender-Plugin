@@ -50,6 +50,7 @@
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <labelFor value="68a78"/>
           <text resource-bundle="locale/BlendCharm" key="newBlenderPanel.region"/>
         </properties>
       </component>
@@ -70,6 +71,7 @@
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <labelFor value="f28d8"/>
           <text resource-bundle="locale/BlendCharm" key="newBlenderPanel.space"/>
         </properties>
       </component>
