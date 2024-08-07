@@ -27,12 +27,7 @@
     </extensions>
 
     <actions>
-        <reference ref="NewGroup"/>
         <group id="Blender" class="actions.DynamicActionGroup" popup="true" text="Blend-Charm" icon="BlendCharmIcons.BLENDER_LOGO" description="A bounce of adding instruction for Blend-Charm plugin.">
-            <add-to-group group-id="NewGroup" anchor="first"/>
-        </group>
-        <group>
-            <separator/>
             <add-to-group group-id="NewGroup" anchor="first"/>
         </group>
     </actions>
