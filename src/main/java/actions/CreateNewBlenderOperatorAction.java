@@ -1,6 +1,5 @@
 package actions;
 
-import com.intellij.history.core.Paths;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemImpl;
@@ -12,6 +11,7 @@ import util.MyProjectHolder;
 import util.core.MyFileUtils;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class CreateNewBlenderOperatorAction extends AnAction {
 
@@ -28,7 +28,7 @@ public class CreateNewBlenderOperatorAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
         NewBlenderOperatorWrapper dialog = new NewBlenderOperatorWrapper(project.getProject());
         if (dialog.showAndGet()) {
-            String panelsPath = Paths.appended(virtualBlenderFile.getSubRootVirtualFile().getPath(), "operators");
+            String panelsPath = Paths.get(virtualBlenderFile.getSubRootVirtualFile().getPath(), "operators").toString();
 
             String stream = MyInputStreamHelper.readString(this.getClass().getClassLoader().getResourceAsStream("Python/Templates/new_operator.py"));
             stream = stream.replace("OPERATOR_CLASS_NAME", dialog.form.getOperatorClassName());
@@ -36,7 +36,7 @@ public class CreateNewBlenderOperatorAction extends AnAction {
             stream = stream.replace("$LABEL$", dialog.form.getLabel());
 
             if (MyFileUtils.cantCreateDirectory(panelsPath)) return;
-            MyFileUtils.write(Path.of(Paths.appended(panelsPath, dialog.form.getOperatorFileName())), stream);
+            MyFileUtils.write(Path.of(Paths.get(panelsPath, dialog.form.getOperatorFileName()).toString()), stream);
             LocalFileSystemImpl.getInstance().refresh(true);
         }
     }

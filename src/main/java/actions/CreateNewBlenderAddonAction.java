@@ -1,6 +1,5 @@
 package actions;
 
-import com.intellij.history.core.Paths;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.module.Module;
@@ -20,6 +19,7 @@ import util.core.MyFileUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class CreateNewBlenderAddonAction extends AnAction {
 
@@ -40,7 +40,7 @@ public class CreateNewBlenderAddonAction extends AnAction {
             try {
                 if (!dialog.form.isNameValid()) return;
 
-                String directoryPath = Paths.appended(projectPath, dialog.form.getBlenderAddonFolderName());
+                String directoryPath = Paths.get(projectPath, dialog.form.getBlenderAddonFolderName()).toString();
                 VirtualFile directory = VfsUtil.createDirectories(directoryPath);
 
                 Module module = ModuleUtil.findModuleForFile(directory, project.getProject());
@@ -57,7 +57,7 @@ public class CreateNewBlenderAddonAction extends AnAction {
                 stream = stream.replace("$ADDON_AUTHOR$", dialog.form.getBlenderAddonAuthor());
                 stream = stream.replace("$ADDON_DESCRIPTION$", dialog.form.getBlenderAddonDescription());
 
-                MyFileUtils.write(Path.of(Paths.appended(directoryPath, "__init__.py")), stream);
+                MyFileUtils.write(Path.of(Paths.get(directoryPath, "__init__.py").toString()), stream);
                 LocalFileSystemImpl.getInstance().refresh(true);
             } catch (IOException e) {
                 e.printStackTrace();
