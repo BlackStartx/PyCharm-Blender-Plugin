@@ -33,6 +33,7 @@ intellijPlatform {
         id = "org.blackstartx.blend-charm"
         name = "Blend-Charm"
         version = tVer
+        changeNotes = file("changelog.md").readText()
 
         productDescriptor {
         }
