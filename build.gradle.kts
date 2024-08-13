@@ -1,27 +1,46 @@
 plugins {
-    id("java")
-    id("org.jetbrains.intellij") version "1.17.4"
+    id("org.jetbrains.intellij.platform") version "2.0.1"
 }
 
 group = "org.blackstartx"
+val tVer: String = "2024.2"
 val code = "isCommunity = true"
 val path = "src\\main\\java\\plugin_settings\\PluginSettings.java"
 val type = if (File(path).readText().contains(code)) "Community" else "Professional"
-version = "2024.2"
+version = tVer
 
 repositories {
     mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
-    testImplementation(group = "junit", name = "junit", version = "4.13.2")
     implementation(group = "org.json", name = "json", version = "20240303")
+    intellijPlatform {
+        pycharmProfessional("2024.2")
+        bundledPlugin("PythonCore")
+        bundledPlugin("Pythonid")
+        instrumentationTools()
+    }
 }
 
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    plugins.set(listOf("python"))
-    version.set("PY-2024.2")
+intellijPlatform {
+    pluginConfiguration {
+        id = "org.blackstartx.blend-charm"
+        name = "Blend-Charm"
+        version = tVer
+
+        productDescriptor {
+        }
+        ideaVersion {
+        }
+        vendor {
+        }
+    }
 }
 
 tasks {
